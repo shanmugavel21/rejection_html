@@ -1,12 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>GTS QC Rejection Report</title>
 
@@ -17,10 +13,11 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
-            padding: 10px;
-            background: #f5f5f5;
+            padding: 15px;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            color: #222;
         }
 
         .container {
@@ -30,69 +27,46 @@
 
         h1 {
             text-align: center;
-            font-size: 23px;
-            margin: 8px 0 15px;
+            font-size: 24px;
+            margin-bottom: 20px;
         }
 
-        .controls {
-            background: white;
-            padding: 12px;
-            border-radius: 10px;
+        h2 {
+            font-size: 20px;
+            margin-top: 25px;
             margin-bottom: 10px;
         }
 
-        .control-row {
-            display: flex;
-            gap: 10px;
-        }
-
-        .control {
-            flex: 1;
+        .top-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
         }
 
         label {
-            display: block;
             font-weight: bold;
-            margin-bottom: 5px;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        input,
+        select,
+        button {
+            font-size: 16px;
         }
 
         input,
         select {
             width: 100%;
-            padding: 9px;
-            font-size: 16px;
-            border: 1px solid #ccc;
+            padding: 10px;
+            border: 1px solid #bbb;
             border-radius: 6px;
+            background: white;
         }
 
-        button {
+        .table-wrapper {
             width: 100%;
-            padding: 11px;
-            border: none;
-            border-radius: 7px;
-            font-size: 15px;
-            cursor: pointer;
-        }
-
-        .daily-btn {
-            margin-top: 10px;
-            background: #0d6efd;
-            color: white;
-        }
-
-        .save-btn {
-            margin-top: 12px;
-            background: #198754;
-            color: white;
-        }
-
-        .delete-btn {
-            margin-top: 10px;
-            background: #dc3545;
-            color: white;
-        }
-
-        .table-container {
             overflow-x: auto;
             background: white;
             border-radius: 8px;
@@ -101,102 +75,162 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 500px;
         }
 
         th,
         td {
             border: 1px solid #ddd;
-            padding: 7px;
+            padding: 8px;
         }
 
         th {
-            background: #eeeeee;
+            background: #e9ecef;
             text-align: center;
-            position: sticky;
-            top: 0;
         }
 
         td:first-child {
-            text-align: left;
-        }
-
-        td:not(:first-child) {
-            text-align: center;
+            font-weight: 500;
         }
 
         .number-input {
-            width: 65px;
+            width: 80px;
             text-align: center;
-            padding: 7px;
-            margin: 0;
         }
 
-        .message {
-            padding: 11px;
-            margin-top: 8px;
+        .production-section {
+            margin-top: 30px;
+        }
+
+        #productionTable {
+            min-width: 400px;
+        }
+
+        .model-name {
+            width: 100%;
+        }
+
+        .production-count {
+            width: 100px;
+            text-align: center;
+        }
+
+        .button-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            border: none;
             border-radius: 7px;
-            display: none;
-            text-align: center;
+            padding: 11px 18px;
+            cursor: pointer;
             font-weight: bold;
         }
 
-        .success {
-            background: #d1e7dd;
+        .add-button {
+            margin-top: 10px;
+            background: #1976d2;
+            color: white;
         }
 
-        .error {
-            background: #f8d7da;
+        .save-button {
+            background: #198754;
+            color: white;
         }
 
-        .total-box {
-            background: white;
-            padding: 14px;
+        .total-button {
+            background: #6f42c1;
+            color: white;
+        }
+
+        .delete-button {
+            background: #dc3545;
+            color: white;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        #message {
             margin-top: 12px;
-            border-radius: 10px;
-            text-align: center;
-            font-size: 19px;
             font-weight: bold;
         }
 
-        .loading {
-            text-align: center;
-            padding: 20px;
+        .daily-total {
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            display: none;
+        }
+
+        .total-card {
+            margin-bottom: 15px;
+            padding: 12px;
+            background: #f1f3f5;
+            border-radius: 6px;
+        }
+
+        .total-card strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .total-value {
+            font-size: 22px;
             font-weight: bold;
+        }
+
+        .daily-table {
+            min-width: 400px;
+            margin-top: 10px;
         }
 
         @media (max-width: 600px) {
 
             body {
-                padding: 7px;
+                padding: 8px;
             }
 
             h1 {
                 font-size: 20px;
             }
 
-            .control-row {
-                flex-direction: column;
-                gap: 7px;
+            h2 {
+                font-size: 18px;
             }
 
-            table {
-                font-size: 13px;
+            .top-section {
+                grid-template-columns: 1fr;
             }
 
             th,
             td {
                 padding: 6px;
+                font-size: 14px;
             }
 
             .number-input {
-                width: 55px;
+                width: 65px;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .button-row {
+                display: flex;
+                flex-direction: column;
             }
         }
 
     </style>
-
 </head>
-
 
 <body>
 
@@ -207,784 +241,1291 @@
 
     <!-- DATE + SHIFT -->
 
-    <div class="controls">
+    <div class="top-section">
 
-        <div class="control-row">
+        <div>
+            <label for="reportDate">Date</label>
 
-            <div class="control">
-
-                <label>Date</label>
-
-                <input
-                    type="date"
-                    id="reportDate"
-                >
-
-            </div>
+            <input
+                type="date"
+                id="reportDate"
+            >
+        </div>
 
 
-            <div class="control">
+        <div>
+            <label for="shift">Shift</label>
 
-                <label>Shift</label>
+            <select id="shift">
 
-                <select id="shift">
+                <option value="1st Shift">
+                    1st Shift
+                </option>
 
-                    <option value="1st Shift">
-                        1st Shift
-                    </option>
+                <option value="General Shift">
+                    General Shift
+                </option>
 
-                    <option value="General Shift">
-                        General Shift
-                    </option>
+                <option value="2nd Shift">
+                    2nd Shift
+                </option>
 
-                    <option value="2nd Shift">
-                        2nd Shift
-                    </option>
+            </select>
 
-                </select>
+        </div>
 
-            </div>
+    </div>
+
+
+    <!-- REJECTION TABLE -->
+
+    <h2>Rejection Details</h2>
+
+    <div class="table-wrapper">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Fault</th>
+
+                    <th>Supplier</th>
+
+                    <th>Process</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="rejectionBody">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- MODEL PRODUCTION -->
+
+    <div class="production-section">
+
+        <h2>Model Production</h2>
+
+        <div class="table-wrapper">
+
+            <table id="productionTable">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Model Name</th>
+
+                        <th>Count</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="productionBody">
+
+                </tbody>
+
+            </table>
 
         </div>
 
 
         <button
-            class="daily-btn"
-            onclick="showDailyTotal()"
+            type="button"
+            class="add-button"
+            onclick="addProductionRow()"
         >
-            📊 Show Daily Total
+            + Add Model
         </button>
 
     </div>
 
 
-    <!-- TABLE -->
+    <!-- BUTTONS -->
 
-    <div
-        id="tableContainer"
-        class="table-container"
-    >
-        <div class="loading">
-            Loading...
-        </div>
+    <div class="button-row">
+
+        <button
+            type="button"
+            class="save-button"
+            onclick="saveData()"
+        >
+            💾 Save
+        </button>
+
+
+        <button
+            type="button"
+            class="total-button"
+            onclick="showDailyTotal()"
+        >
+            📊 Daily Total
+        </button>
+
+
+        <button
+            type="button"
+            class="delete-button"
+            onclick="deleteData()"
+        >
+            🗑 Delete Date + Shift
+        </button>
+
     </div>
 
 
-    <!-- SAVE -->
+    <!-- MESSAGE -->
 
-    <button
-        class="save-btn"
-        onclick="saveData()"
-    >
-        💾 Save Rejection Data
-    </button>
-
-
-    <!-- MESSAGE BELOW SAVE BUTTON -->
-
-    <div
-        id="message"
-        class="message"
-    ></div>
-
-
-    <!-- DELETE -->
-
-    <button
-        class="delete-btn"
-        onclick="deleteData()"
-    >
-        🗑️ Delete Date + Shift Data
-    </button>
+    <div id="message"></div>
 
 
     <!-- DAILY TOTAL -->
 
     <div
-        id="totalContainer"
-        class="total-box"
-        style="display:none;"
-    ></div>
+        id="dailyTotal"
+        class="daily-total"
+    >
+
+        <h2>Daily Total</h2>
+
+
+        <div class="total-card">
+
+            <strong>Total Production</strong>
+
+            <span
+                id="productionTotal"
+                class="total-value"
+            >
+                0
+            </span>
+
+        </div>
+
+
+        <div class="total-card">
+
+            <strong>Supplier Rejection</strong>
+
+            <span
+                id="supplierTotal"
+                class="total-value"
+            >
+                0
+            </span>
+
+        </div>
+
+
+        <div class="total-card">
+
+            <strong>Process Rejection</strong>
+
+            <span
+                id="processTotal"
+                class="total-value"
+            >
+                0
+            </span>
+
+        </div>
+
+
+        <div class="total-card">
+
+            <strong>Total Rejection</strong>
+
+            <span
+                id="rejectionTotal"
+                class="total-value"
+            >
+                0
+            </span>
+
+        </div>
+
+
+        <!-- SHIFT PRODUCTION -->
+
+        <h3>Shift-wise Production</h3>
+
+        <div class="table-wrapper">
+
+            <table class="daily-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Shift</th>
+
+                        <th>Production</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="shiftTotalBody">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- MODEL PRODUCTION -->
+
+        <h3>Model-wise Production</h3>
+
+        <div class="table-wrapper">
+
+            <table class="daily-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Model Name</th>
+
+                        <th>Count</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="modelTotalBody">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
 
 </div>
 
 
 <script>
 
+    // =========================
+    // FAULT LIST
+    // =========================
 
-// ==================================================
-// SET TODAY
-// ==================================================
+    const faults = [
 
-document.getElementById("reportDate").value =
-    new Date().toISOString().split("T")[0];
+        "Frame Coating Fault - MS",
+        "Leg / patti spot broken",
+        "Frame Dent",
+        "Rubber Leg Fault",
+        "Dial Plate Sticker Damage",
+        "Dial Plate Scratches / printing issues",
+        "Knob Scratches / printing issues",
+        "Glass Broken",
+        "Glass Acid mark / Printing issue",
+        "O Ring Fault",
+        "Fixed Tray - Small",
+        "Fixed Tray - Big",
+        "Fixed Tray - Jumbo",
+        "Bundy Tube Damage",
+        "Bundy Tube Leak",
+        "Mixing Tube Fault - Small",
+        "Mixing Tube Fault - Big",
+        "Mixing Tube Fault - Jumbo",
+        "Mixing Tube Broken",
+        "Sim OFF",
+        "Sim HIGH",
+        "Function Tight",
+        "Flame LOW",
+        "Flame HIGH",
+        "Jet Block",
+        "Pipe Block",
+        "Burner Fault (W/O Pin)",
+        "Burner Fault (I/O Flame)",
+        "Burner Coating Fault",
+        "Panstand Rejection - Seating / Bend",
+        "Panstand Rejection - Coating fault",
+        "Panstand Rejection - Pin removed",
+        "PC Box Damage",
+        "PC Box Vendor Rejection",
+        "Dry Air Leak Testing"
+
+    ];
 
 
-// ==================================================
-// MESSAGE
-// ==================================================
+    // =========================
+    // DATE
+    // =========================
 
-function showMessage(message, success = true) {
+    function setTodayDate() {
 
-    const box =
-        document.getElementById("message");
+        const today = new Date();
 
-    box.textContent = message;
+        const year = today.getFullYear();
 
-    box.className =
-        "message " +
-        (success ? "success" : "error");
+        const month =
+            String(today.getMonth() + 1)
+            .padStart(2, "0");
 
-    box.style.display = "block";
-}
+        const day =
+            String(today.getDate())
+            .padStart(2, "0");
 
-
-// ==================================================
-// AUTOMATIC LOAD
-// ==================================================
-
-async function loadData() {
-
-    const date =
-        document.getElementById("reportDate").value;
-
-    const shift =
-        document.getElementById("shift").value;
-
-
-    if (!date) {
-        return;
+        document.getElementById("reportDate").value =
+            `${year}-${month}-${day}`;
     }
 
 
-    document.getElementById(
-        "tableContainer"
-    ).innerHTML = `
-        <div class="loading">
-            Loading...
-        </div>
-    `;
+    // =========================
+    // CREATE REJECTION ROWS
+    // =========================
+
+    function createFaultRows() {
+
+        const tbody =
+            document.getElementById("rejectionBody");
+
+        tbody.innerHTML = "";
 
 
-    try {
+        faults.forEach(function(fault) {
 
-        const response =
-            await fetch(
-                `/rejections?report_date=${date}&shift=${encodeURIComponent(shift)}`
-            );
+            const row =
+                document.createElement("tr");
 
 
-        const result =
-            await response.json();
+            row.innerHTML = `
 
+                <td>
+                    ${fault}
+                </td>
 
-        let html = `
+                <td>
 
-            <table>
+                    <input
+                        type="number"
+                        min="0"
+                        value="0"
+                        class="number-input supplier-input"
+                    >
 
-                <thead>
+                </td>
 
-                    <tr>
+                <td>
 
-                        <th>Fault</th>
+                    <input
+                        type="number"
+                        min="0"
+                        value="0"
+                        class="number-input process-input"
+                    >
 
-                        <th>Supplier</th>
-
-                        <th>Process</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-        `;
-
-
-        // ------------------------------------------
-        // FAULTS ONLY
-        // NO SECTION HEADINGS
-        // ------------------------------------------
-
-        result.data.forEach(row => {
-
-            html += `
-
-                <tr>
-
-                    <td>
-                        ${escapeHtml(row.fault_name)}
-                    </td>
-
-                    <td>
-
-                        <input
-                            class="number-input supplier-input"
-                            type="number"
-                            min="0"
-                            value="${row.supplier || 0}"
-                        >
-
-                    </td>
-
-                    <td>
-
-                        <input
-                            class="number-input process-input"
-                            type="number"
-                            min="0"
-                            value="${row.process || 0}"
-                        >
-
-                    </td>
-
-                </tr>
+                </td>
 
             `;
 
+
+            tbody.appendChild(row);
+
         });
-
-
-        html += `
-
-                </tbody>
-
-            </table>
-
-        `;
-
-
-        document.getElementById(
-            "tableContainer"
-        ).innerHTML = html;
-
-
-        document.getElementById(
-            "totalContainer"
-        ).style.display = "none";
 
 
         setupEnterNavigation();
 
-
     }
 
-    catch (error) {
 
-        showMessage(
-            "Error loading data: " +
-            error.message,
-            false
-        );
+    // =========================
+    // ENTER KEY NAVIGATION
+    // =========================
 
-    }
+    function setupEnterNavigation() {
 
-}
-
-
-// ==================================================
-// ENTER → DOWN SAME COLUMN
-// ==================================================
-
-function setupEnterNavigation() {
-
-    const rows =
-        document.querySelectorAll(
-            "tbody tr"
-        );
-
-
-    rows.forEach((row, index) => {
-
-        const inputs =
-            row.querySelectorAll(
-                ".number-input"
+        const rows =
+            document.querySelectorAll(
+                "#rejectionBody tr"
             );
 
 
-        inputs.forEach(input => {
+        rows.forEach(function(row, index) {
 
-            input.addEventListener(
-                "keydown",
-                function(event) {
-
-                    if (event.key !== "Enter") {
-                        return;
-                    }
+            const inputs =
+                row.querySelectorAll(
+                    ".number-input"
+                );
 
 
-                    event.preventDefault();
+            inputs.forEach(function(input) {
 
+                input.addEventListener(
+                    "keydown",
+                    function(event) {
 
-                    // --------------------------------
-                    // Find current column
-                    // --------------------------------
-
-                    const currentCell =
-                        input.closest("td");
-
-                    const currentColumn =
-                        currentCell.cellIndex;
-
-
-                    // --------------------------------
-                    // Move DOWN same column
-                    // --------------------------------
-
-                    for (
-                        let nextRowIndex = index + 1;
-                        nextRowIndex < rows.length;
-                        nextRowIndex++
-                    ) {
-
-                        const nextInput =
-                            rows[
-                                nextRowIndex
-                            ].querySelectorAll(
-                                ".number-input"
-                            )[currentColumn - 1];
-
-
-                        if (nextInput) {
-
-                            nextInput.focus();
-                            nextInput.select();
-
+                        if (
+                            event.key !== "Enter"
+                        ) {
                             return;
                         }
 
-                    }
 
-                }
-            );
+                        event.preventDefault();
+
+
+                        const currentCell =
+                            input.closest("td");
+
+
+                        const currentColumn =
+                            currentCell.cellIndex;
+
+
+                        for (
+                            let nextRowIndex =
+                                index + 1;
+
+                            nextRowIndex <
+                            rows.length;
+
+                            nextRowIndex++
+                        ) {
+
+                            const nextInputs =
+                                rows[
+                                    nextRowIndex
+                                ].querySelectorAll(
+                                    ".number-input"
+                                );
+
+
+                            const nextInput =
+                                nextInputs[
+                                    currentColumn - 1
+                                ];
+
+
+                            if (nextInput) {
+
+                                nextInput.focus();
+
+                                nextInput.select();
+
+                                return;
+
+                            }
+
+                        }
+
+                    }
+                );
+
+            });
 
         });
 
-    });
-
-}
-
-
-// ==================================================
-// ESCAPE HTML
-// ==================================================
-
-function escapeHtml(text) {
-
-    return String(text)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-
-}
-
-
-// ==================================================
-// SAVE DATA
-// ==================================================
-
-async function saveData() {
-
-    const date =
-        document.getElementById(
-            "reportDate"
-        ).value;
-
-    const shift =
-        document.getElementById(
-            "shift"
-        ).value;
-
-
-    if (!date) {
-
-        showMessage(
-            "Please select date.",
-            false
-        );
-
-        return;
     }
 
 
-    const rows = [];
+    // =========================
+    // ADD MODEL ROW
+    // =========================
+
+    function addProductionRow(
+        modelName = "",
+        count = 0
+    ) {
+
+        const tbody =
+            document.getElementById(
+                "productionBody"
+            );
 
 
-    const tableRows =
-        document.querySelectorAll(
-            "tbody tr"
-        );
+        const row =
+            document.createElement("tr");
 
 
-    tableRows.forEach(row => {
+        row.innerHTML = `
 
-        const faultCell =
-            row.querySelector("td:first-child");
+            <td>
+
+                <input
+                    type="text"
+                    class="model-name"
+                    value="${escapeHtml(modelName)}"
+                    placeholder="Model Name"
+                >
+
+            </td>
+
+            <td>
+
+                <input
+                    type="number"
+                    class="production-count"
+                    value="${count}"
+                    min="0"
+                    placeholder="Count"
+                >
+
+            </td>
+
+        `;
 
 
-        if (!faultCell) {
+        tbody.appendChild(row);
+
+    }
+
+
+    // =========================
+    // ESCAPE HTML
+    // =========================
+
+    function escapeHtml(value) {
+
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+    }
+
+
+    // =========================
+    // LOAD DATA
+    // =========================
+
+    async function loadData() {
+
+        const date =
+            document.getElementById(
+                "reportDate"
+            ).value;
+
+
+        const shift =
+            document.getElementById(
+                "shift"
+            ).value;
+
+
+        if (!date || !shift) {
             return;
         }
 
 
-        const fault =
-            faultCell.textContent.trim();
+        try {
+
+            // -------------------------
+            // LOAD REJECTIONS
+            // -------------------------
+
+            const rejectionResponse =
+                await fetch(
+                    `/rejections?report_date=${date}&shift=${encodeURIComponent(shift)}`
+                );
 
 
-        const inputs =
-            row.querySelectorAll(
-                ".number-input"
-            );
+            const rejectionData =
+                await rejectionResponse.json();
 
 
-        const supplier =
-            parseInt(inputs[0].value) || 0;
+            const rows =
+                document.querySelectorAll(
+                    "#rejectionBody tr"
+                );
 
 
-        const process =
-            parseInt(inputs[1].value) || 0;
+            rows.forEach(function(row) {
+
+                const fault =
+                    row.children[0]
+                    .textContent
+                    .trim();
 
 
-        rows.push({
-
-            fault_name: fault,
-
-            supplier: supplier,
-
-            process: process
-
-        });
-
-    });
+                const data =
+                    rejectionData.find(
+                        item =>
+                            item.fault_name === fault
+                    );
 
 
-    try {
+                const supplierInput =
+                    row.querySelector(
+                        ".supplier-input"
+                    );
 
-        const response =
-            await fetch(
-                "/save",
-                {
 
-                    method: "POST",
+                const processInput =
+                    row.querySelector(
+                        ".process-input"
+                    );
 
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
 
-                    body: JSON.stringify({
+                if (data) {
 
-                        report_date: date,
+                    supplierInput.value =
+                        data.supplier || 0;
 
-                        shift: shift,
+                    processInput.value =
+                        data.process || 0;
 
-                        data: rows
+                } else {
 
-                    })
+                    supplierInput.value = 0;
+
+                    processInput.value = 0;
 
                 }
-            );
+
+            });
 
 
-        const result =
-            await response.json();
+            // -------------------------
+            // LOAD PRODUCTION
+            // -------------------------
+
+            await loadProduction();
 
 
-        if (result.success) {
+            // -------------------------
+            // HIDE DAILY TOTAL
+            // -------------------------
 
-            showMessage(
-                "✅ Data saved successfully",
-                true
-            );
-
-        }
-        else {
-
-            showMessage(
-                result.message,
-                false
-            );
-
-        }
-
-    }
-
-    catch (error) {
-
-        showMessage(
-            "Save error: " +
-            error.message,
-            false
-        );
-
-    }
-
-}
-
-
-// ==================================================
-// DAILY TOTAL
-// ==================================================
-
-async function showDailyTotal() {
-
-    const date =
-        document.getElementById(
-            "reportDate"
-        ).value;
-
-
-    if (!date) {
-
-        showMessage(
-            "Please select date.",
-            false
-        );
-
-        return;
-    }
-
-
-    try {
-
-        const response =
-            await fetch(
-                `/daily-total?report_date=${date}`
-            );
-
-
-        const result =
-            await response.json();
-
-
-        let html = `
-
-            <table>
-
-                <thead>
-
-                    <tr>
-
-                        <th>Fault</th>
-
-                        <th>Daily Total</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-        `;
-
-
-        result.data.forEach(row => {
-
-            html += `
-
-                <tr>
-
-                    <td>
-                        ${escapeHtml(row.fault_name)}
-                    </td>
-
-                    <td>
-                        ${row.daily_total}
-                    </td>
-
-                </tr>
-
-            `;
-
-        });
-
-
-        html += `
-
-                </tbody>
-
-            </table>
-
-        `;
-
-
-        document.getElementById(
-            "tableContainer"
-        ).innerHTML = html;
-
-
-        const totalBox =
             document.getElementById(
-                "totalContainer"
-            );
+                "dailyTotal"
+            ).style.display = "none";
 
 
-        totalBox.textContent =
-            `📊 Total Daily Rejection: ${result.total}`;
-
-
-        totalBox.style.display =
-            "block";
-
-
-        document.getElementById(
-            "message"
-        ).style.display = "none";
-
-
-    }
-
-    catch (error) {
-
-        showMessage(
-            "Daily total error: " +
-            error.message,
-            false
-        );
-
-    }
-
-}
-
-
-// ==================================================
-// DELETE DATA
-// ==================================================
-
-async function deleteData() {
-
-    const date =
-        document.getElementById(
-            "reportDate"
-        ).value;
-
-    const shift =
-        document.getElementById(
-            "shift"
-        ).value;
-
-
-    if (!date) {
-
-        showMessage(
-            "Please select date.",
-            false
-        );
-
-        return;
-    }
-
-
-    const confirmed =
-        confirm(
-            `Delete all data for ${date} | ${shift}?`
-        );
-
-
-    if (!confirmed) {
-        return;
-    }
-
-
-    try {
-
-        const response =
-            await fetch(
-                `/delete?report_date=${date}&shift=${encodeURIComponent(shift)}`,
-                {
-                    method: "DELETE"
-                }
-            );
-
-
-        const result =
-            await response.json();
-
-
-        if (result.success) {
+        } catch (error) {
 
             showMessage(
-                result.message,
+                "❌ Error loading data",
                 true
             );
 
-            loadData();
+        }
+
+    }
+
+
+    // =========================
+    // LOAD PRODUCTION
+    // =========================
+
+    async function loadProduction() {
+
+        const date =
+            document.getElementById(
+                "reportDate"
+            ).value;
+
+
+        const shift =
+            document.getElementById(
+                "shift"
+            ).value;
+
+
+        const response =
+            await fetch(
+                `/production?report_date=${date}&shift=${encodeURIComponent(shift)}`
+            );
+
+
+        const data =
+            await response.json();
+
+
+        const tbody =
+            document.getElementById(
+                "productionBody"
+            );
+
+
+        tbody.innerHTML = "";
+
+
+        if (data.length === 0) {
+
+            addProductionRow();
+
+            addProductionRow();
+
+            addProductionRow();
+
+        } else {
+
+            data.forEach(function(item) {
+
+                addProductionRow(
+                    item.model_name,
+                    item.production_count
+                );
+
+            });
 
         }
-        else {
+
+    }
+
+
+    // =========================
+    // SAVE DATA
+    // =========================
+
+    async function saveData() {
+
+        const date =
+            document.getElementById(
+                "reportDate"
+            ).value;
+
+
+        const shift =
+            document.getElementById(
+                "shift"
+            ).value;
+
+
+        if (!date || !shift) {
 
             showMessage(
-                result.message,
-                false
+                "❌ Please select date and shift",
+                true
+            );
+
+            return;
+
+        }
+
+
+        // -------------------------
+        // REJECTION DATA
+        // -------------------------
+
+        const rejectionData = [];
+
+
+        document
+            .querySelectorAll(
+                "#rejectionBody tr"
+            )
+            .forEach(function(row) {
+
+                const fault =
+                    row.children[0]
+                    .textContent
+                    .trim();
+
+
+                const supplier =
+                    parseInt(
+                        row.querySelector(
+                            ".supplier-input"
+                        ).value
+                    ) || 0;
+
+
+                const process =
+                    parseInt(
+                        row.querySelector(
+                            ".process-input"
+                        ).value
+                    ) || 0;
+
+
+                rejectionData.push({
+
+                    fault_name: fault,
+
+                    supplier: supplier,
+
+                    process: process
+
+                });
+
+            });
+
+
+        // -------------------------
+        // PRODUCTION DATA
+        // -------------------------
+
+        const production = [];
+
+
+        document
+            .querySelectorAll(
+                "#productionBody tr"
+            )
+            .forEach(function(row) {
+
+                const modelName =
+                    row.querySelector(
+                        ".model-name"
+                    ).value.trim();
+
+
+                const count =
+                    parseInt(
+                        row.querySelector(
+                            ".production-count"
+                        ).value
+                    ) || 0;
+
+
+                if (
+                    modelName !== ""
+                ) {
+
+                    production.push({
+
+                        model_name:
+                            modelName,
+
+                        production_count:
+                            count
+
+                    });
+
+                }
+
+            });
+
+
+        // -------------------------
+        // SEND TO SERVER
+        // -------------------------
+
+        try {
+
+            const response =
+                await fetch(
+                    "/save",
+                    {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body:
+                            JSON.stringify({
+
+                                report_date:
+                                    date,
+
+                                shift:
+                                    shift,
+
+                                data:
+                                    rejectionData,
+
+                                production:
+                                    production
+
+                            })
+
+                    }
+                );
+
+
+            const result =
+                await response.json();
+
+
+            if (result.success) {
+
+                showMessage(
+                    "✅ Data saved successfully",
+                    false
+                );
+
+            } else {
+
+                showMessage(
+                    "❌ " + result.message,
+                    true
+                );
+
+            }
+
+        } catch (error) {
+
+            showMessage(
+                "❌ Error saving data",
+                true
             );
 
         }
 
     }
 
-    catch (error) {
 
-        showMessage(
-            "Delete error: " +
-            error.message,
-            false
+    // =========================
+    // DAILY TOTAL
+    // =========================
+
+    async function showDailyTotal() {
+
+        const date =
+            document.getElementById(
+                "reportDate"
+            ).value;
+
+
+        if (!date) {
+
+            showMessage(
+                "❌ Please select date",
+                true
+            );
+
+            return;
+
+        }
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `/daily-total?report_date=${date}`
+                );
+
+
+            const data =
+                await response.json();
+
+
+            // -------------------------
+            // TOTAL VALUES
+            // -------------------------
+
+            document.getElementById(
+                "productionTotal"
+            ).textContent =
+                data.production_total;
+
+
+            document.getElementById(
+                "supplierTotal"
+            ).textContent =
+                data.supplier_total;
+
+
+            document.getElementById(
+                "processTotal"
+            ).textContent =
+                data.process_total;
+
+
+            document.getElementById(
+                "rejectionTotal"
+            ).textContent =
+                data.rejection_total;
+
+
+            // -------------------------
+            // SHIFT TOTAL
+            // -------------------------
+
+            const shiftBody =
+                document.getElementById(
+                    "shiftTotalBody"
+                );
+
+
+            shiftBody.innerHTML = "";
+
+
+            data.production_by_shift
+                .forEach(function(item) {
+
+                    const row =
+                        document.createElement(
+                            "tr"
+                        );
+
+
+                    row.innerHTML = `
+
+                        <td>
+                            ${escapeHtml(item.shift)}
+                        </td>
+
+                        <td>
+                            ${item.count}
+                        </td>
+
+                    `;
+
+
+                    shiftBody.appendChild(row);
+
+                });
+
+
+            // -------------------------
+            // MODEL TOTAL
+            // -------------------------
+
+            const modelBody =
+                document.getElementById(
+                    "modelTotalBody"
+                );
+
+
+            modelBody.innerHTML = "";
+
+
+            data.production_by_model
+                .forEach(function(item) {
+
+                    const row =
+                        document.createElement(
+                            "tr"
+                        );
+
+
+                    row.innerHTML = `
+
+                        <td>
+                            ${escapeHtml(
+                                item.model_name
+                            )}
+                        </td>
+
+                        <td>
+                            ${item.count}
+                        </td>
+
+                    `;
+
+
+                    modelBody.appendChild(row);
+
+                });
+
+
+            // -------------------------
+            // SHOW TOTAL
+            // -------------------------
+
+            document.getElementById(
+                "dailyTotal"
+            ).style.display = "block";
+
+
+        } catch (error) {
+
+            showMessage(
+                "❌ Error loading daily total",
+                true
+            );
+
+        }
+
+    }
+
+
+    // =========================
+    // DELETE DATA
+    // =========================
+
+    async function deleteData() {
+
+        const date =
+            document.getElementById(
+                "reportDate"
+            ).value;
+
+
+        const shift =
+            document.getElementById(
+                "shift"
+            ).value;
+
+
+        if (!date || !shift) {
+
+            showMessage(
+                "❌ Please select date and shift",
+                true
+            );
+
+            return;
+
+        }
+
+
+        const confirmDelete =
+            confirm(
+                `Delete all data for ${date} - ${shift}?`
+            );
+
+
+        if (!confirmDelete) {
+            return;
+        }
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `/delete?report_date=${date}&shift=${encodeURIComponent(shift)}`,
+                    {
+                        method: "DELETE"
+                    }
+                );
+
+
+            const result =
+                await response.json();
+
+
+            if (result.success) {
+
+                showMessage(
+                    "✅ Data deleted successfully",
+                    false
+                );
+
+
+                createFaultRows();
+
+
+                const productionBody =
+                    document.getElementById(
+                        "productionBody"
+                    );
+
+
+                productionBody.innerHTML = "";
+
+
+                addProductionRow();
+
+                addProductionRow();
+
+                addProductionRow();
+
+
+                document.getElementById(
+                    "dailyTotal"
+                ).style.display = "none";
+
+
+            } else {
+
+                showMessage(
+                    "❌ " + result.message,
+                    true
+                );
+
+            }
+
+        } catch (error) {
+
+            showMessage(
+                "❌ Error deleting data",
+                true
+            );
+
+        }
+
+    }
+
+
+    // =========================
+    // MESSAGE
+    // =========================
+
+    function showMessage(
+        message,
+        isError
+    ) {
+
+        const element =
+            document.getElementById(
+                "message"
+            );
+
+
+        element.textContent =
+            message;
+
+
+        if (isError) {
+
+            element.style.color =
+                "#dc3545";
+
+        } else {
+
+            element.style.color =
+                "#198754";
+
+        }
+
+    }
+
+
+    // =========================
+    // DATE / SHIFT CHANGE
+    // =========================
+
+    document
+        .getElementById("reportDate")
+        .addEventListener(
+            "change",
+            loadData
         );
 
-    }
 
-}
-
-
-// ==================================================
-// AUTOMATIC LOAD WHEN PAGE OPENS
-// ==================================================
-
-window.addEventListener(
-    "DOMContentLoaded",
-    function() {
-
-        loadData();
-
-    }
-);
+    document
+        .getElementById("shift")
+        .addEventListener(
+            "change",
+            loadData
+        );
 
 
-// ==================================================
-// AUTOMATIC LOAD WHEN DATE CHANGES
-// ==================================================
+    // =========================
+    // INITIAL LOAD
+    // =========================
 
-document.getElementById(
-    "reportDate"
-).addEventListener(
-    "change",
-    function() {
+    setTodayDate();
 
-        loadData();
+    createFaultRows();
 
-    }
-);
+    addProductionRow();
 
+    addProductionRow();
 
-// ==================================================
-// AUTOMATIC LOAD WHEN SHIFT CHANGES
-// ==================================================
+    addProductionRow();
 
-document.getElementById(
-    "shift"
-).addEventListener(
-    "change",
-    function() {
-
-        loadData();
-
-    }
-);
-
+    loadData();
 
 </script>
 
 </body>
-
 </html>
