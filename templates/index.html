@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -140,6 +140,11 @@
             color: white;
         }
 
+        .download-button {
+            background: #0d6efd;
+            color: white;
+        }
+
         .delete-button {
             background: #dc3545;
             color: white;
@@ -218,6 +223,7 @@
 <div class="container">
 
     <h1>🏭 GTS QC Rejection Report</h1>
+
 
     <!-- DATE + SHIFT -->
 
@@ -334,6 +340,22 @@
             id="dailyTotalButton"
         >
             📊 Daily Total
+        </button>
+
+        <button
+            type="button"
+            class="download-button"
+            id="downloadShiftButton"
+        >
+            📥 Download Shift
+        </button>
+
+        <button
+            type="button"
+            class="download-button"
+            id="downloadDayButton"
+        >
+            📥 Download Day
         </button>
 
         <button
@@ -1027,7 +1049,7 @@
 
 
     // ==================================================
-    // DAILY TOTAL - FIXED
+    // DAILY TOTAL
     // ==================================================
 
     async function showDailyTotal() {
@@ -1057,8 +1079,6 @@
                     `/daily-total?report_date=${encodeURIComponent(date)}`
                 );
 
-            // Check API response
-
             if (!response.ok) {
 
                 const errorText =
@@ -1077,15 +1097,8 @@
             const data =
                 await response.json();
 
-            console.log(
-                "Daily Total Data:",
-                data
-            );
 
-
-            // ==================================================
             // MAIN TOTALS
-            // ==================================================
 
             document.getElementById(
                 "productionTotal"
@@ -1108,9 +1121,7 @@
                 data.rejection_total || 0;
 
 
-            // ==================================================
-            // SHIFT-WISE PRODUCTION
-            // ==================================================
+            // SHIFT-WISE
 
             const shiftBody =
                 document.getElementById(
@@ -1160,9 +1171,7 @@
             }
 
 
-            // ==================================================
-            // MODEL-WISE PRODUCTION
-            // ==================================================
+            // MODEL-WISE
 
             const modelBody =
                 document.getElementById(
@@ -1214,7 +1223,7 @@
             }
 
 
-            // SHOW DAILY TOTAL
+            // SHOW
 
             document.getElementById(
                 "dailyTotal"
@@ -1238,6 +1247,328 @@
             );
 
         }
+
+    }
+
+
+    // ==================================================
+    // DOWNLOAD SHIFT
+    // ==================================================
+
+    async function downloadShift() {
+
+        const date =
+            document.getElementById("reportDate").value;
+
+        const shift =
+            document.getElementById("shift").value;
+
+        if (!date || !shift) {
+
+            showMessage(
+                "❌ Please select date and shift",
+                true
+            );
+
+            return;
+        }
+
+        try {
+
+            showMessage(
+                "Preparing shift download...",
+                false
+            );
+
+            const rejectionResponse =
+                await fetch(
+                    `/rejections?report_date=${encodeURIComponent(date)}&shift=${encodeURIComponent(shift)}`
+                );
+
+            if (!rejectionResponse.ok) {
+                throw new Error(
+                    "Rejection loading failed"
+                );
+            }
+
+            const rejectionData =
+                await rejectionResponse.json();
+
+
+            const productionResponse =
+                await fetch(
+                    `/production?report_date=${encodeURIComponent(date)}&shift=${encodeURIComponent(shift)}`
+                );
+
+            if (!productionResponse.ok) {
+                throw new Error(
+                    "Production loading failed"
+                );
+            }
+
+            const productionData =
+                await productionResponse.json();
+
+
+            let csv = "";
+
+            csv += "GTS QC Rejection Report\n";
+            csv += `Date,${date}\n`;
+            csv += `Shift,${shift}\n\n`;
+
+
+            // REJECTION
+
+            csv += "REJECTION DETAILS\n";
+            csv += "Fault,Supplier,Process\n";
+
+            rejectionData.forEach(function(item) {
+
+                csv += `"${csvEscape(item.fault_name)}",`;
+                csv += `${item.supplier || 0},`;
+                csv += `${item.process || 0}\n`;
+
+            });
+
+
+            // PRODUCTION
+
+            csv += "\nMODEL PRODUCTION\n";
+            csv += "Model Name,Count\n";
+
+            productionData.forEach(function(item) {
+
+                csv += `"${csvEscape(item.model_name)}",`;
+                csv += `${item.production_count || 0}\n`;
+
+            });
+
+
+            downloadCSV(
+                csv,
+                `GTS_QC_${date}_${safeFileName(shift)}.csv`
+            );
+
+            showMessage(
+                "✅ Shift downloaded successfully",
+                false
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Shift Download Error:",
+                error
+            );
+
+            showMessage(
+                "❌ Error downloading shift",
+                true
+            );
+
+        }
+
+    }
+
+
+    // ==================================================
+    // DOWNLOAD DAY
+    // ==================================================
+
+    async function downloadDay() {
+
+        const date =
+            document.getElementById("reportDate").value;
+
+        if (!date) {
+
+            showMessage(
+                "❌ Please select date",
+                true
+            );
+
+            return;
+        }
+
+        const shifts = [
+            "1st Shift",
+            "General Shift",
+            "2nd Shift"
+        ];
+
+        try {
+
+            showMessage(
+                "Preparing full day download...",
+                false
+            );
+
+            let csv = "";
+
+            csv += "GTS QC Rejection Report\n";
+            csv += `Date,${date}\n\n`;
+
+
+            for (const shift of shifts) {
+
+                // REJECTION
+
+                const rejectionResponse =
+                    await fetch(
+                        `/rejections?report_date=${encodeURIComponent(date)}&shift=${encodeURIComponent(shift)}`
+                    );
+
+                if (!rejectionResponse.ok) {
+                    throw new Error(
+                        `Failed to load ${shift} rejection data`
+                    );
+                }
+
+                const rejectionData =
+                    await rejectionResponse.json();
+
+
+                // PRODUCTION
+
+                const productionResponse =
+                    await fetch(
+                        `/production?report_date=${encodeURIComponent(date)}&shift=${encodeURIComponent(shift)}`
+                    );
+
+                if (!productionResponse.ok) {
+                    throw new Error(
+                        `Failed to load ${shift} production data`
+                    );
+                }
+
+                const productionData =
+                    await productionResponse.json();
+
+
+                csv += `SHIFT: ${shift}\n\n`;
+
+
+                // REJECTION
+
+                csv += "REJECTION DETAILS\n";
+                csv += "Fault,Supplier,Process\n";
+
+                rejectionData.forEach(function(item) {
+
+                    csv += `"${csvEscape(item.fault_name)}",`;
+                    csv += `${item.supplier || 0},`;
+                    csv += `${item.process || 0}\n`;
+
+                });
+
+
+                // PRODUCTION
+
+                csv += "\nMODEL PRODUCTION\n";
+                csv += "Model Name,Count\n";
+
+                productionData.forEach(function(item) {
+
+                    csv += `"${csvEscape(item.model_name)}",`;
+                    csv += `${item.production_count || 0}\n`;
+
+                });
+
+                csv += "\n\n";
+
+            }
+
+
+            downloadCSV(
+                csv,
+                `GTS_QC_Day_${date}.csv`
+            );
+
+            showMessage(
+                "✅ Full day downloaded successfully",
+                false
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Day Download Error:",
+                error
+            );
+
+            showMessage(
+                "❌ Error downloading day",
+                true
+            );
+
+        }
+
+    }
+
+
+    // ==================================================
+    // CSV ESCAPE
+    // ==================================================
+
+    function csvEscape(value) {
+
+        return String(value ?? "")
+            .replace(/"/g, '""');
+    }
+
+
+    // ==================================================
+    // SAFE FILE NAME
+    // ==================================================
+
+    function safeFileName(value) {
+
+        return String(value)
+            .replace(/[^a-zA-Z0-9_-]/g, "_");
+    }
+
+
+    // ==================================================
+    // CSV DOWNLOAD
+    // ==================================================
+
+    function downloadCSV(
+        csv,
+        filename
+    ) {
+
+        // BOM helps Excel display text correctly
+
+        const BOM = "\uFEFF";
+
+        const blob =
+            new Blob(
+                [
+                    BOM + csv
+                ],
+                {
+                    type:
+                        "text/csv;charset=utf-8;"
+                }
+            );
+
+        const url =
+            URL.createObjectURL(blob);
+
+        const link =
+            document.createElement("a");
+
+        link.href = url;
+
+        link.download = filename;
+
+        document.body.appendChild(link);
+
+        link.click();
+
+        document.body.removeChild(link);
+
+        URL.revokeObjectURL(url);
 
     }
 
@@ -1288,7 +1619,9 @@
                 );
 
             if (!response.ok) {
-                throw new Error("Delete API failed");
+                throw new Error(
+                    "Delete API failed"
+                );
             }
 
             const result =
@@ -1387,6 +1720,22 @@
 
 
     document
+        .getElementById("downloadShiftButton")
+        .addEventListener(
+            "click",
+            downloadShift
+        );
+
+
+    document
+        .getElementById("downloadDayButton")
+        .addEventListener(
+            "click",
+            downloadDay
+        );
+
+
+    document
         .getElementById("deleteButton")
         .addEventListener(
             "click",
@@ -1435,4 +1784,4 @@
 </script>
 
 </body>
-</html>
+</html>s
