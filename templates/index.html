@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -219,7 +219,6 @@
 
     <h1>🏭 GTS QC Rejection Report</h1>
 
-
     <!-- DATE + SHIFT -->
 
     <div class="top-section">
@@ -232,7 +231,6 @@
                 id="reportDate"
             >
         </div>
-
 
         <div>
             <label for="shift">Shift</label>
@@ -307,7 +305,6 @@
 
         </div>
 
-
         <button
             type="button"
             class="add-button"
@@ -331,7 +328,6 @@
             💾 Save
         </button>
 
-
         <button
             type="button"
             class="total-button"
@@ -339,7 +335,6 @@
         >
             📊 Daily Total
         </button>
-
 
         <button
             type="button"
@@ -364,7 +359,6 @@
 
         <h2>Daily Total</h2>
 
-
         <div class="total-card">
             <strong>Total Production</strong>
 
@@ -375,7 +369,6 @@
                 0
             </span>
         </div>
-
 
         <div class="total-card">
             <strong>Supplier Rejection</strong>
@@ -388,7 +381,6 @@
             </span>
         </div>
 
-
         <div class="total-card">
             <strong>Process Rejection</strong>
 
@@ -399,7 +391,6 @@
                 0
             </span>
         </div>
-
 
         <div class="total-card">
             <strong>Total Rejection</strong>
@@ -413,6 +404,8 @@
         </div>
 
 
+        <!-- SHIFT-WISE -->
+
         <h3>Shift-wise Production</h3>
 
         <div class="table-wrapper">
@@ -420,10 +413,12 @@
             <table class="daily-table">
 
                 <thead>
+
                     <tr>
                         <th>Shift</th>
                         <th>Production</th>
                     </tr>
+
                 </thead>
 
                 <tbody id="shiftTotalBody"></tbody>
@@ -433,6 +428,8 @@
         </div>
 
 
+        <!-- MODEL-WISE -->
+
         <h3>Model-wise Production</h3>
 
         <div class="table-wrapper">
@@ -440,10 +437,12 @@
             <table class="daily-table">
 
                 <thead>
+
                     <tr>
                         <th>Model Name</th>
                         <th>Count</th>
                     </tr>
+
                 </thead>
 
                 <tbody id="modelTotalBody"></tbody>
@@ -523,9 +522,7 @@
             String(today.getDate())
                 .padStart(2, "0");
 
-        document.getElementById(
-            "reportDate"
-        ).value =
+        document.getElementById("reportDate").value =
             `${year}-${month}-${day}`;
     }
 
@@ -537,18 +534,14 @@
     function createFaultRows() {
 
         const tbody =
-            document.getElementById(
-                "rejectionBody"
-            );
+            document.getElementById("rejectionBody");
 
         tbody.innerHTML = "";
-
 
         faults.forEach(function(fault) {
 
             const row =
                 document.createElement("tr");
-
 
             row.innerHTML = `
 
@@ -580,11 +573,9 @@
 
             `;
 
-
             tbody.appendChild(row);
 
         });
-
 
         setupEnterNavigation();
     }
@@ -597,18 +588,12 @@
     function setupEnterNavigation() {
 
         const rows =
-            document.querySelectorAll(
-                "#rejectionBody tr"
-            );
-
+            document.querySelectorAll("#rejectionBody tr");
 
         rows.forEach(function(row, rowIndex) {
 
             const inputs =
-                row.querySelectorAll(
-                    ".number-input"
-                );
-
+                row.querySelectorAll(".number-input");
 
             inputs.forEach(function(input) {
 
@@ -616,44 +601,27 @@
                     "keydown",
                     function(event) {
 
-                        if (
-                            event.key !== "Enter"
-                        ) {
+                        if (event.key !== "Enter") {
                             return;
                         }
 
-
                         event.preventDefault();
 
-
                         const currentColumn =
-                            input.closest("td")
-                                .cellIndex;
-
+                            input.closest("td").cellIndex;
 
                         for (
-                            let nextRowIndex =
-                                rowIndex + 1;
-
-                            nextRowIndex <
-                            rows.length;
-
+                            let nextRowIndex = rowIndex + 1;
+                            nextRowIndex < rows.length;
                             nextRowIndex++
                         ) {
 
                             const nextInputs =
-                                rows[
-                                    nextRowIndex
-                                ].querySelectorAll(
-                                    ".number-input"
-                                );
-
+                                rows[nextRowIndex]
+                                    .querySelectorAll(".number-input");
 
                             const nextInput =
-                                nextInputs[
-                                    currentColumn - 1
-                                ];
-
+                                nextInputs[currentColumn - 1];
 
                             if (nextInput) {
 
@@ -662,6 +630,7 @@
 
                                 return;
                             }
+
                         }
 
                     }
@@ -684,14 +653,10 @@
     ) {
 
         const tbody =
-            document.getElementById(
-                "productionBody"
-            );
-
+            document.getElementById("productionBody");
 
         const row =
             document.createElement("tr");
-
 
         row.innerHTML = `
 
@@ -720,7 +685,6 @@
 
         `;
 
-
         tbody.appendChild(row);
     }
 
@@ -746,59 +710,35 @@
 
     function clearScreenForNewShift() {
 
-        // Clear rejection values
-
         document
-            .querySelectorAll(
-                ".supplier-input"
-            )
+            .querySelectorAll(".supplier-input")
             .forEach(function(input) {
 
                 input.value = 0;
 
             });
 
-
         document
-            .querySelectorAll(
-                ".process-input"
-            )
+            .querySelectorAll(".process-input")
             .forEach(function(input) {
 
                 input.value = 0;
 
             });
-
-
-        // Clear production
 
         const productionBody =
-            document.getElementById(
-                "productionBody"
-            );
+            document.getElementById("productionBody");
 
         productionBody.innerHTML = "";
 
-
-        // Add 3 empty rows
-
         addProductionRow();
         addProductionRow();
         addProductionRow();
 
+        document.getElementById("dailyTotal").style.display =
+            "none";
 
-        // Hide daily total
-
-        document.getElementById(
-            "dailyTotal"
-        ).style.display = "none";
-
-
-        // Clear message
-
-        document.getElementById(
-            "message"
-        ).textContent = "";
+        document.getElementById("message").textContent = "";
     }
 
 
@@ -809,57 +749,35 @@
     async function loadData() {
 
         const date =
-            document.getElementById(
-                "reportDate"
-            ).value;
-
+            document.getElementById("reportDate").value;
 
         const shift =
-            document.getElementById(
-                "shift"
-            ).value;
-
+            document.getElementById("shift").value;
 
         if (!date || !shift) {
             return;
         }
 
-
-        // IMPORTANT:
-        // Clear old shift data first
-
         clearScreenForNewShift();
-
 
         try {
 
-            // ==================================================
-            // LOAD REJECTION DATA
-            // ==================================================
+            // REJECTION
 
             const rejectionResponse =
                 await fetch(
-                    `/rejections?report_date=${date}&shift=${encodeURIComponent(shift)}`
+                    `/rejections?report_date=${encodeURIComponent(date)}&shift=${encodeURIComponent(shift)}`
                 );
-
 
             if (!rejectionResponse.ok) {
-
-                throw new Error(
-                    "Rejection loading failed"
-                );
+                throw new Error("Rejection loading failed");
             }
-
 
             const rejectionData =
                 await rejectionResponse.json();
 
-
             const rows =
-                document.querySelectorAll(
-                    "#rejectionBody tr"
-                );
-
+                document.querySelectorAll("#rejectionBody tr");
 
             rows.forEach(function(row) {
 
@@ -868,70 +786,43 @@
                         .textContent
                         .trim();
 
-
                 const data =
                     rejectionData.find(
-                        item =>
-                            item.fault_name === fault
+                        item => item.fault_name === fault
                     );
-
 
                 if (data) {
 
-                    row.querySelector(
-                        ".supplier-input"
-                    ).value =
+                    row.querySelector(".supplier-input").value =
                         data.supplier || 0;
 
-
-                    row.querySelector(
-                        ".process-input"
-                    ).value =
+                    row.querySelector(".process-input").value =
                         data.process || 0;
-
                 }
 
             });
 
 
-            // ==================================================
-            // LOAD PRODUCTION DATA
-            // ==================================================
+            // PRODUCTION
 
             const productionResponse =
                 await fetch(
-                    `/production?report_date=${date}&shift=${encodeURIComponent(shift)}`
+                    `/production?report_date=${encodeURIComponent(date)}&shift=${encodeURIComponent(shift)}`
                 );
-
 
             if (!productionResponse.ok) {
-
-                throw new Error(
-                    "Production loading failed"
-                );
+                throw new Error("Production loading failed");
             }
-
 
             const productionData =
                 await productionResponse.json();
 
-
             const productionBody =
-                document.getElementById(
-                    "productionBody"
-                );
-
-
-            // Remove empty rows
+                document.getElementById("productionBody");
 
             productionBody.innerHTML = "";
 
-
-            if (
-                productionData.length === 0
-            ) {
-
-                // This shift has no saved production
+            if (productionData.length === 0) {
 
                 addProductionRow();
                 addProductionRow();
@@ -939,23 +830,20 @@
 
             } else {
 
-                // Load ONLY selected shift
+                productionData.forEach(function(item) {
 
-                productionData.forEach(
-                    function(item) {
+                    addProductionRow(
+                        item.model_name,
+                        item.production_count
+                    );
 
-                        addProductionRow(
-                            item.model_name,
-                            item.production_count
-                        );
-
-                    }
-                );
+                });
 
             }
 
-
         } catch (error) {
+
+            console.error("Load Error:", error);
 
             showMessage(
                 "❌ Error loading data",
@@ -974,16 +862,10 @@
     async function saveData() {
 
         const date =
-            document.getElementById(
-                "reportDate"
-            ).value;
-
+            document.getElementById("reportDate").value;
 
         const shift =
-            document.getElementById(
-                "shift"
-            ).value;
-
+            document.getElementById("shift").value;
 
         if (!date || !shift) {
 
@@ -996,24 +878,18 @@
         }
 
 
-        // ==================================================
         // REJECTION DATA
-        // ==================================================
 
         const rejectionData = [];
 
-
         document
-            .querySelectorAll(
-                "#rejectionBody tr"
-            )
+            .querySelectorAll("#rejectionBody tr")
             .forEach(function(row) {
 
                 const fault =
                     row.children[0]
                         .textContent
                         .trim();
-
 
                 const supplier =
                     parseInt(
@@ -1022,14 +898,12 @@
                         ).value
                     ) || 0;
 
-
                 const process =
                     parseInt(
                         row.querySelector(
                             ".process-input"
                         ).value
                     ) || 0;
-
 
                 rejectionData.push({
 
@@ -1044,24 +918,18 @@
             });
 
 
-        // ==================================================
         // PRODUCTION DATA
-        // ==================================================
 
         const production = [];
 
-
         document
-            .querySelectorAll(
-                "#productionBody tr"
-            )
+            .querySelectorAll("#productionBody tr")
             .forEach(function(row) {
 
                 const modelName =
                     row.querySelector(
                         ".model-name"
                     ).value.trim();
-
 
                 const count =
                     parseInt(
@@ -1070,18 +938,13 @@
                         ).value
                     ) || 0;
 
-
-                if (
-                    modelName !== ""
-                ) {
+                if (modelName !== "") {
 
                     production.push({
 
-                        model_name:
-                            modelName,
+                        model_name: modelName,
 
-                        production_count:
-                            count
+                        production_count: count
 
                     });
 
@@ -1090,9 +953,7 @@
             });
 
 
-        // ==================================================
-        // SAVE TO DATABASE
-        // ==================================================
+        // SAVE
 
         try {
 
@@ -1128,10 +989,12 @@
                     }
                 );
 
+            if (!response.ok) {
+                throw new Error("Save API failed");
+            }
 
             const result =
                 await response.json();
-
 
             if (result.success) {
 
@@ -1146,31 +1009,31 @@
                     "❌ " + result.message,
                     true
                 );
+
             }
 
-
         } catch (error) {
+
+            console.error("Save Error:", error);
 
             showMessage(
                 "❌ Error saving data",
                 true
             );
+
         }
 
     }
 
 
     // ==================================================
-    // DAILY TOTAL
+    // DAILY TOTAL - FIXED
     // ==================================================
 
     async function showDailyTotal() {
 
         const date =
-            document.getElementById(
-                "reportDate"
-            ).value;
-
+            document.getElementById("reportDate").value;
 
         if (!date) {
 
@@ -1182,45 +1045,71 @@
             return;
         }
 
-
         try {
+
+            showMessage(
+                "Loading daily total...",
+                false
+            );
 
             const response =
                 await fetch(
-                    `/daily-total?report_date=${date}`
+                    `/daily-total?report_date=${encodeURIComponent(date)}`
                 );
 
+            // Check API response
+
+            if (!response.ok) {
+
+                const errorText =
+                    await response.text();
+
+                console.error(
+                    "Daily Total API Error:",
+                    errorText
+                );
+
+                throw new Error(
+                    "Daily Total API failed"
+                );
+            }
 
             const data =
                 await response.json();
 
+            console.log(
+                "Daily Total Data:",
+                data
+            );
+
+
+            // ==================================================
+            // MAIN TOTALS
+            // ==================================================
 
             document.getElementById(
                 "productionTotal"
             ).textContent =
-                data.production_total;
-
+                data.production_total || 0;
 
             document.getElementById(
                 "supplierTotal"
             ).textContent =
-                data.supplier_total;
-
+                data.supplier_total || 0;
 
             document.getElementById(
                 "processTotal"
             ).textContent =
-                data.process_total;
-
+                data.process_total || 0;
 
             document.getElementById(
                 "rejectionTotal"
             ).textContent =
-                data.rejection_total;
+                data.rejection_total || 0;
 
 
             // ==================================================
-            // SHIFT TOTAL
+            // SHIFT-WISE PRODUCTION
             // ==================================================
 
             const shiftBody =
@@ -1228,37 +1117,51 @@
                     "shiftTotalBody"
                 );
 
-
             shiftBody.innerHTML = "";
 
+            const shiftData =
+                data.production_by_shift || [];
 
-            data.production_by_shift
-                .forEach(function(item) {
+            if (shiftData.length === 0) {
+
+                const row =
+                    document.createElement("tr");
+
+                row.innerHTML = `
+                    <td colspan="2"
+                        style="text-align:center;">
+                        No production data
+                    </td>
+                `;
+
+                shiftBody.appendChild(row);
+
+            } else {
+
+                shiftData.forEach(function(item) {
 
                     const row =
                         document.createElement("tr");
 
-
                     row.innerHTML = `
-
                         <td>
                             ${escapeHtml(item.shift)}
                         </td>
 
                         <td>
-                            ${item.count}
+                            ${item.count || 0}
                         </td>
-
                     `;
-
 
                     shiftBody.appendChild(row);
 
                 });
 
+            }
+
 
             // ==================================================
-            // MODEL TOTAL
+            // MODEL-WISE PRODUCTION
             // ==================================================
 
             const modelBody =
@@ -1266,19 +1169,33 @@
                     "modelTotalBody"
                 );
 
-
             modelBody.innerHTML = "";
 
+            const modelData =
+                data.production_by_model || [];
 
-            data.production_by_model
-                .forEach(function(item) {
+            if (modelData.length === 0) {
+
+                const row =
+                    document.createElement("tr");
+
+                row.innerHTML = `
+                    <td colspan="2"
+                        style="text-align:center;">
+                        No production data
+                    </td>
+                `;
+
+                modelBody.appendChild(row);
+
+            } else {
+
+                modelData.forEach(function(item) {
 
                     const row =
                         document.createElement("tr");
 
-
                     row.innerHTML = `
-
                         <td>
                             ${escapeHtml(
                                 item.model_name
@@ -1286,28 +1203,40 @@
                         </td>
 
                         <td>
-                            ${item.count}
+                            ${item.count || 0}
                         </td>
-
                     `;
-
 
                     modelBody.appendChild(row);
 
                 });
 
+            }
+
+
+            // SHOW DAILY TOTAL
 
             document.getElementById(
                 "dailyTotal"
             ).style.display = "block";
 
+            showMessage(
+                "✅ Daily total loaded",
+                false
+            );
 
         } catch (error) {
 
+            console.error(
+                "Daily Total Error:",
+                error
+            );
+
             showMessage(
-                "❌ Error loading daily total",
+                "❌ Error loading daily total. Check Render logs.",
                 true
             );
+
         }
 
     }
@@ -1324,12 +1253,10 @@
                 "reportDate"
             ).value;
 
-
         const shift =
             document.getElementById(
                 "shift"
             ).value;
-
 
         if (!date || !shift) {
 
@@ -1341,45 +1268,40 @@
             return;
         }
 
-
         const confirmDelete =
             confirm(
                 `Delete all data for ${date} - ${shift}?`
             );
 
-
         if (!confirmDelete) {
             return;
         }
-
 
         try {
 
             const response =
                 await fetch(
-                    `/delete?report_date=${date}&shift=${encodeURIComponent(shift)}`,
+                    `/delete?report_date=${encodeURIComponent(date)}&shift=${encodeURIComponent(shift)}`,
                     {
                         method: "DELETE"
                     }
                 );
 
+            if (!response.ok) {
+                throw new Error("Delete API failed");
+            }
 
             const result =
                 await response.json();
 
-
             if (result.success) {
 
-                // Clear screen
-
                 clearScreenForNewShift();
-
 
                 showMessage(
                     "✅ Data deleted successfully",
                     false
                 );
-
 
             } else {
 
@@ -1387,15 +1309,21 @@
                     "❌ " + result.message,
                     true
                 );
+
             }
 
-
         } catch (error) {
+
+            console.error(
+                "Delete Error:",
+                error
+            );
 
             showMessage(
                 "❌ Error deleting data",
                 true
             );
+
         }
 
     }
@@ -1415,15 +1343,14 @@
                 "message"
             );
 
-
         element.textContent =
             message;
-
 
         element.style.color =
             isError
                 ? "#dc3545"
                 : "#198754";
+
     }
 
 
