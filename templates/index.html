@@ -1,9 +1,9 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>GTS QC Rejection Report</title>
 
     <style>
@@ -15,63 +15,108 @@
             margin: 0;
             padding: 15px;
             font-family: Arial, sans-serif;
-            background: #f4f4f4;
+            background: #f4f6f8;
             color: #222;
         }
 
         .container {
             max-width: 1200px;
             margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
         }
 
         h1 {
             text-align: center;
-            margin-top: 0;
             margin-bottom: 20px;
         }
 
         h2 {
             margin-top: 25px;
-            margin-bottom: 12px;
-            font-size: 20px;
         }
 
-        .controls {
+        .top-section {
             display: flex;
-            gap: 10px;
+            gap: 15px;
             flex-wrap: wrap;
-            margin-bottom: 20px;
+            align-items: end;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
         }
 
-        .controls label {
-            font-weight: bold;
+        .field {
             display: flex;
             flex-direction: column;
             gap: 5px;
         }
 
+        label {
+            font-weight: bold;
+        }
+
         input,
+        select,
+        button {
+            font-size: 16px;
+            padding: 9px;
+            border-radius: 5px;
+            border: 1px solid #aaa;
+        }
+
+        input[type="number"] {
+            width: 100px;
+        }
+
+        input[type="date"],
         select {
-            min-height: 40px;
-            padding: 8px 10px;
-            border: 1px solid #bbb;
-            border-radius: 6px;
-            font-size: 15px;
+            min-width: 160px;
+        }
+
+        button {
+            cursor: pointer;
+            background: #1976d2;
+            color: white;
+            border: none;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .btn-green {
+            background: #2e7d32;
+        }
+
+        .btn-orange {
+            background: #ef6c00;
+        }
+
+        .btn-red {
+            background: #c62828;
+        }
+
+        .btn-gray {
+            background: #555;
+        }
+
+        .button-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 15px 0;
         }
 
         .table-wrapper {
             width: 100%;
             overflow-x: auto;
+            background: white;
+            border-radius: 8px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 600px;
+            background: white;
         }
 
         th,
@@ -86,65 +131,44 @@
             font-weight: bold;
         }
 
-        td:first-child,
-        th:first-child {
+        td:first-child {
             text-align: left;
         }
 
-        .rejection-input {
+        .fault-name {
+            min-width: 250px;
+        }
+
+        .section-name {
+            width: 110px;
+            font-weight: bold;
+        }
+
+        .supplier-input,
+        .process-input {
             width: 90px;
             text-align: center;
         }
 
-        .model-name-input {
-            width: 100%;
-            min-width: 150px;
+        .production-model {
+            width: 250px;
         }
 
-        .count-input {
+        .production-count {
             width: 120px;
             text-align: center;
         }
 
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 20px;
-        }
-
-        button {
-            min-height: 42px;
-            padding: 10px 16px;
-            border: none;
-            border-radius: 7px;
-            background: #333;
-            color: white;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        button:hover {
-            opacity: 0.9;
-        }
-
-        .add-model-btn {
-            margin-top: 10px;
-            background: #333;
-        }
-
         .message {
-            margin-top: 15px;
+            margin: 10px 0;
             padding: 10px;
-            border-radius: 6px;
+            border-radius: 5px;
             display: none;
-            font-weight: bold;
         }
 
         .success {
             background: #dff0d8;
-            color: #2e6b2e;
+            color: #256029;
         }
 
         .error {
@@ -153,43 +177,61 @@
         }
 
         .daily-section {
-            margin-top: 30px;
-            display: none;
+            margin-top: 25px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .daily-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: end;
+            margin-bottom: 15px;
         }
 
         .summary-cards {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 10px;
-            margin-bottom: 20px;
+            margin: 15px 0;
         }
 
-        .summary-card {
-            border: 1px solid #ccc;
-            border-radius: 8px;
+        .card {
             padding: 15px;
+            background: #f5f5f5;
+            border-radius: 8px;
             text-align: center;
-            background: #fafafa;
+            border: 1px solid #ddd;
         }
 
-        .summary-card h3 {
-            margin: 0 0 8px;
-            font-size: 15px;
-        }
-
-        .summary-card p {
-            margin: 0;
-            font-size: 24px;
+        .card-title {
+            font-size: 14px;
             font-weight: bold;
         }
 
-        .section-title {
-            margin-top: 25px;
+        .card-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 5px;
         }
 
-        .loading {
-            text-align: center;
-            padding: 15px;
+        .daily-table {
+            margin-top: 15px;
+        }
+
+        .daily-table th:first-child,
+        .daily-table td:first-child {
+            width: 55%;
+        }
+
+        .grand-total {
+            font-weight: bold;
+            background: #eeeeee;
+        }
+
+        .hidden {
             display: none;
         }
 
@@ -198,46 +240,77 @@
                 padding: 8px;
             }
 
-            .container {
-                padding: 12px;
-            }
-
             h1 {
                 font-size: 22px;
             }
 
             h2 {
-                font-size: 18px;
+                font-size: 19px;
             }
 
-            .controls {
-                flex-direction: column;
+            .top-section {
+                display: grid;
+                grid-template-columns: 1fr;
             }
 
-            .controls label {
+            input[type="date"],
+            select {
                 width: 100%;
             }
 
-            .controls input,
-            .controls select {
-                width: 100%;
+            .button-row button {
+                flex: 1 1 45%;
             }
 
             .summary-cards {
                 grid-template-columns: repeat(2, 1fr);
             }
 
-            .action-buttons {
+            .card {
+                padding: 10px;
+            }
+
+            .card-value {
+                font-size: 20px;
+            }
+
+            /*
+             * Daily Total:
+             * Fault name can wrap instead of making the whole
+             * table very wide on mobile.
+             */
+            #faultWiseTable {
+                table-layout: fixed;
+                width: 100%;
+            }
+
+            #faultWiseTable th:first-child,
+            #faultWiseTable td:first-child {
+                width: 55%;
+                white-space: normal;
+                overflow-wrap: anywhere;
+                word-break: break-word;
+                text-align: left;
+            }
+
+            #faultWiseTable th:nth-child(2),
+            #faultWiseTable td:nth-child(2),
+            #faultWiseTable th:nth-child(3),
+            #faultWiseTable td:nth-child(3),
+            #faultWiseTable th:nth-child(4),
+            #faultWiseTable td:nth-child(4) {
+                width: 15%;
+                padding: 6px 3px;
+            }
+
+            .daily-controls {
                 flex-direction: column;
+                align-items: stretch;
             }
 
-            .action-buttons button {
+            .daily-controls input,
+            .daily-controls button {
                 width: 100%;
-            }
-
-            .add-model-btn {
-                width: 100%;
-                min-height: 46px;
             }
         }
     </style>
@@ -249,33 +322,30 @@
 
     <h1>GTS QC Rejection Report</h1>
 
-    <!-- DATE / SHIFT -->
-    <div class="controls">
+    <div class="top-section">
 
-        <label>
-            Report Date
+        <div class="field">
+            <label for="reportDate">Report Date</label>
             <input type="date" id="reportDate">
-        </label>
+        </div>
 
-        <label>
-            Shift
+        <div class="field">
+            <label for="shift">Shift</label>
             <select id="shift">
                 <option value="1st Shift">1st Shift</option>
                 <option value="General Shift">General Shift</option>
                 <option value="2nd Shift">2nd Shift</option>
             </select>
-        </label>
+        </div>
 
     </div>
 
+    <div id="message" class="message"></div>
 
-    <!-- REJECTION DETAILS -->
     <h2>Rejection Details</h2>
 
     <div class="table-wrapper">
-
-        <table>
-
+        <table id="rejectionTable">
             <thead>
                 <tr>
                     <th>Fault Name</th>
@@ -283,116 +353,82 @@
                     <th>Process</th>
                 </tr>
             </thead>
-
             <tbody id="rejectionBody"></tbody>
-
         </table>
-
     </div>
 
-
-    <!-- PRODUCTION DETAILS -->
     <h2>Production Details</h2>
 
     <div class="table-wrapper">
-
-        <table>
-
+        <table id="productionTable">
             <thead>
                 <tr>
                     <th>Model Name</th>
                     <th>Production Count</th>
                 </tr>
             </thead>
-
             <tbody id="productionBody"></tbody>
-
         </table>
-
     </div>
 
-    <!-- ADD MODEL BUTTON -->
-    <button
-        type="button"
-        class="add-model-btn"
-        onclick="addProductionRow()">
-        + Add Model
-    </button>
-
-
-    <!-- ACTION BUTTONS -->
-    <div class="action-buttons">
-
-        <button type="button" onclick="saveData()">
-            Save
-        </button>
-
-        <button type="button" onclick="showDailyTotal()">
-            Daily Total
-        </button>
-
-        <button type="button" onclick="downloadShift()">
-            Download Shift
-        </button>
-
-        <button type="button" onclick="downloadDay()">
-            Download Day
-        </button>
-
-        <button type="button" onclick="deleteData()">
-            Delete Date + Shift
-        </button>
-
+    <div class="button-row">
+        <button onclick="addModel()">+ Add Model</button>
     </div>
 
-
-    <div id="message" class="message"></div>
-
-    <div id="loading" class="loading">
-        Loading...
+    <div class="button-row">
+        <button class="btn-green" onclick="saveData()">Save</button>
+        <button class="btn-orange" onclick="showDailyTotal()">Daily Total</button>
+        <button class="btn-gray" onclick="downloadShift()">Download Shift</button>
+        <button class="btn-gray" onclick="downloadDay()">Download Day</button>
+        <button class="btn-red" onclick="deleteData()">Delete Date + Shift</button>
     </div>
-
 
     <!-- DAILY TOTAL -->
-    <div id="dailySection" class="daily-section">
+    <div id="dailySection" class="daily-section hidden">
 
         <h2>Daily Total</h2>
 
-        <!-- SUMMARY -->
+        <div class="daily-controls">
+
+            <div class="field">
+                <label for="dailyTotalDate">Daily Total Date</label>
+                <input type="date" id="dailyTotalDate">
+            </div>
+
+            <button onclick="showDailyTotal()">
+                View Daily Total
+            </button>
+
+        </div>
+
         <div class="summary-cards">
 
-            <div class="summary-card">
-                <h3>Total Production</h3>
-                <p id="totalProduction">0</p>
+            <div class="card">
+                <div class="card-title">Total Production</div>
+                <div class="card-value" id="totalProduction">0</div>
             </div>
 
-            <div class="summary-card">
-                <h3>Supplier Rejection</h3>
-                <p id="totalSupplier">0</p>
+            <div class="card">
+                <div class="card-title">Supplier Rejection</div>
+                <div class="card-value" id="totalSupplier">0</div>
             </div>
 
-            <div class="summary-card">
-                <h3>Process Rejection</h3>
-                <p id="totalProcess">0</p>
+            <div class="card">
+                <div class="card-title">Process Rejection</div>
+                <div class="card-value" id="totalProcess">0</div>
             </div>
 
-            <div class="summary-card">
-                <h3>Total Rejection</h3>
-                <p id="totalRejection">0</p>
+            <div class="card">
+                <div class="card-title">Total Rejection</div>
+                <div class="card-value" id="totalRejection">0</div>
             </div>
 
         </div>
 
-
-        <!-- FAULT-WISE REJECTION -->
-        <h2 class="section-title">
-            Fault-wise Rejection
-        </h2>
+        <h3>Fault-wise Rejection</h3>
 
         <div class="table-wrapper">
-
-            <table>
-
+            <table id="faultWiseTable">
                 <thead>
                     <tr>
                         <th>Fault</th>
@@ -401,507 +437,346 @@
                         <th>Total</th>
                     </tr>
                 </thead>
-
                 <tbody id="faultWiseBody"></tbody>
-
             </table>
-
         </div>
 
-
-        <!-- SHIFT-WISE PRODUCTION -->
-        <h2 class="section-title">
-            Shift-wise Production
-        </h2>
+        <h3>Shift-wise Production</h3>
 
         <div class="table-wrapper">
-
             <table>
-
                 <thead>
                     <tr>
                         <th>Shift</th>
                         <th>Production</th>
                     </tr>
                 </thead>
-
-                <tbody id="shiftWiseBody"></tbody>
-
+                <tbody id="shiftProductionBody"></tbody>
             </table>
-
         </div>
 
-
-        <!-- MODEL-WISE PRODUCTION -->
-        <h2 class="section-title">
-            Model-wise Production
-        </h2>
+        <h3>Model-wise Production</h3>
 
         <div class="table-wrapper">
-
             <table>
-
                 <thead>
                     <tr>
                         <th>Model Name</th>
                         <th>Production</th>
                     </tr>
                 </thead>
-
-                <tbody id="modelWiseBody"></tbody>
-
+                <tbody id="modelProductionBody"></tbody>
             </table>
-
         </div>
 
     </div>
 
 </div>
 
-
 <script>
 
-const faults = [
-    "Frame Coating Fault - MS",
-    "Leg / patti spot broken",
-    "Frame Dent",
-    "Rubber Leg Fault",
-    "Dial Plate Sticker Damage",
-    "Dial Plate Scratches / printing issues",
-    "Knob Scratches / printing issues",
-    "Glass Broken",
-    "Glass Acid mark / Printing issue",
-    "O Ring Fault",
-    "Fixed Tray - Small",
-    "Fixed Tray - Big",
-    "Fixed Tray - Jumbo",
-    "Bundy Tube Damage",
-    "Bundy Tube Leak",
-    "Mixing Tube Fault - Small",
-    "Mixing Tube Fault - Big",
-    "Mixing Tube Fault - Jumbo",
-    "Mixing Tube Broken",
-    "Sim OFF",
-    "Sim HIGH",
-    "Function Tight",
-    "Flame LOW",
-    "Flame HIGH",
-    "Jet Block",
-    "Pipe Block",
-    "Burner Fault (W/O Pin)",
-    "Burner Fault (I/O Flame)",
-    "Burner Coating Fault",
-    "Panstand Rejection - Seating / Bend",
-    "Panstand Rejection - Coating fault",
-    "Panstand Rejection - Pin removed",
-    "PC Box Damage",
-    "PC Box Vendor Rejection",
-    "Dry Air Leak Testing"
-];
+    function showMessage(message, type = "success") {
+        const box = document.getElementById("message");
+
+        box.textContent = message;
+        box.className = "message " + type;
+        box.style.display = "block";
+
+        setTimeout(() => {
+            box.style.display = "none";
+        }, 3000);
+    }
 
 
-function escapeHtml(value) {
+    function setToday() {
 
-    return String(value)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+        const today = new Date().toISOString().split("T")[0];
 
-}
+        document.getElementById("reportDate").value = today;
+        document.getElementById("dailyTotalDate").value = today;
+
+    }
 
 
-function showMessage(message, type = "success") {
+    function renderRejectionRows(data = []) {
 
-    const box = document.getElementById("message");
+        const body = document.getElementById("rejectionBody");
 
-    box.textContent = message;
+        body.innerHTML = "";
 
-    box.className = "message " + type;
+        data.forEach(item => {
 
-    box.style.display = "block";
+            const row = document.createElement("tr");
 
-    setTimeout(() => {
-        box.style.display = "none";
-    }, 3000);
+            row.innerHTML = `
+                <td class="fault-name">
+                    ${item.fault_name}
+                </td>
 
-}
+                <td>
+                    <input
+                        type="number"
+                        min="0"
+                        class="supplier-input"
+                        data-fault="${item.fault_name}"
+                        value="${item.supplier || 0}"
+                    >
+                </td>
+
+                <td>
+                    <input
+                        type="number"
+                        min="0"
+                        class="process-input"
+                        data-fault="${item.fault_name}"
+                        value="${item.process || 0}"
+                    >
+                </td>
+            `;
+
+            body.appendChild(row);
+
+        });
+
+    }
 
 
-function setToday() {
+    function addModel(modelName = "", count = 0) {
 
-    const today = new Date();
-
-    const year = today.getFullYear();
-
-    const month = String(today.getMonth() + 1).padStart(2, "0");
-
-    const day = String(today.getDate()).padStart(2, "0");
-
-    document.getElementById("reportDate").value =
-        `${year}-${month}-${day}`;
-
-}
-
-
-function createRejectionRows() {
-
-    const body = document.getElementById("rejectionBody");
-
-    body.innerHTML = "";
-
-    faults.forEach((fault) => {
+        const body = document.getElementById("productionBody");
 
         const row = document.createElement("tr");
 
         row.innerHTML = `
-            <td>${escapeHtml(fault)}</td>
-
             <td>
                 <input
-                    type="number"
-                    min="0"
-                    value="0"
-                    class="rejection-input supplier-input"
-                    data-fault="${escapeHtml(fault)}">
+                    type="text"
+                    class="production-model"
+                    placeholder="Model name"
+                    value="${modelName}"
+                >
             </td>
 
             <td>
                 <input
                     type="number"
                     min="0"
-                    value="0"
-                    class="rejection-input process-input"
-                    data-fault="${escapeHtml(fault)}">
+                    class="production-count"
+                    placeholder="Count"
+                    value="${count || 0}"
+                >
             </td>
         `;
 
         body.appendChild(row);
-
-    });
-
-}
-
-
-function addProductionRow(modelName = "", count = 0) {
-
-    const body = document.getElementById("productionBody");
-
-    const row = document.createElement("tr");
-
-    row.innerHTML = `
-        <td>
-            <input
-                type="text"
-                class="model-input model-name-input"
-                value="${escapeHtml(modelName)}"
-                placeholder="Model Name">
-        </td>
-
-        <td>
-            <input
-                type="number"
-                min="0"
-                class="count-input"
-                value="${count}">
-        </td>
-    `;
-
-    body.appendChild(row);
-
-}
-
-
-async function loadData() {
-
-    const reportDate =
-        document.getElementById("reportDate").value;
-
-    const shift =
-        document.getElementById("shift").value;
-
-    if (!reportDate || !shift) {
-        return;
     }
 
-    document.getElementById("loading").style.display = "block";
 
-    try {
+    async function loadData() {
 
-        // Load rejection data
-        const rejectionResponse =
-            await fetch(
-                `/rejections?report_date=${encodeURIComponent(reportDate)}&shift=${encodeURIComponent(shift)}`
-            );
+        const reportDate =
+            document.getElementById("reportDate").value;
 
-        const rejectionResult =
-            await rejectionResponse.json();
+        const shift =
+            document.getElementById("shift").value;
 
-        if (rejectionResult.success) {
-
-            document
-                .querySelectorAll(".supplier-input")
-                .forEach(input => {
-
-                    input.value = 0;
-
-                });
-
-            document
-                .querySelectorAll(".process-input")
-                .forEach(input => {
-
-                    input.value = 0;
-
-                });
-
-            rejectionResult.data.forEach(item => {
-
-                const supplierInput =
-                    document.querySelector(
-                        `.supplier-input[data-fault="${CSS.escape(item.fault_name)}"]`
-                    );
-
-                const processInput =
-                    document.querySelector(
-                        `.process-input[data-fault="${CSS.escape(item.fault_name)}"]`
-                    );
-
-                if (supplierInput) {
-                    supplierInput.value = item.supplier || 0;
-                }
-
-                if (processInput) {
-                    processInput.value = item.process || 0;
-                }
-
-            });
-
+        if (!reportDate || !shift) {
+            return;
         }
 
+        try {
 
-        // Load production data
-        const productionResponse =
-            await fetch(
-                `/production?report_date=${encodeURIComponent(reportDate)}&shift=${encodeURIComponent(shift)}`
-            );
-
-        const productionResult =
-            await productionResponse.json();
-
-        const productionBody =
-            document.getElementById("productionBody");
-
-        productionBody.innerHTML = "";
-
-        if (
-            productionResult.success &&
-            productionResult.data.length > 0
-        ) {
-
-            productionResult.data.forEach(item => {
-
-                addProductionRow(
-                    item.model_name,
-                    item.production_count || 0
+            const rejectionResponse =
+                await fetch(
+                    `/rejections?report_date=${encodeURIComponent(reportDate)}&shift=${encodeURIComponent(shift)}`
                 );
 
-            });
+            const rejectionResult =
+                await rejectionResponse.json();
 
-        } else {
+            if (rejectionResult.success) {
+                renderRejectionRows(rejectionResult.data);
+            }
 
-            addProductionRow();
+            const productionResponse =
+                await fetch(
+                    `/production?report_date=${encodeURIComponent(reportDate)}&shift=${encodeURIComponent(shift)}`
+                );
 
-        }
+            const productionResult =
+                await productionResponse.json();
 
-    } catch (error) {
+            const productionBody =
+                document.getElementById("productionBody");
 
-        console.error(error);
+            productionBody.innerHTML = "";
 
-        showMessage(
-            "Error loading data. Check Render logs.",
-            "error"
-        );
+            if (
+                productionResult.success &&
+                productionResult.data.length > 0
+            ) {
 
-    } finally {
+                productionResult.data.forEach(item => {
 
-        document.getElementById("loading").style.display = "none";
+                    addModel(
+                        item.model_name,
+                        item.production_count
+                    );
 
-    }
-
-}
-
-
-async function saveData() {
-
-    const reportDate =
-        document.getElementById("reportDate").value;
-
-    const shift =
-        document.getElementById("shift").value;
-
-    if (!reportDate) {
-
-        showMessage(
-            "Please select report date.",
-            "error"
-        );
-
-        return;
-
-    }
-
-
-    const data = [];
-
-    document
-        .querySelectorAll("#rejectionBody tr")
-        .forEach(row => {
-
-            const faultCell = row.children[0];
-
-            const faultName =
-                faultCell.textContent.trim();
-
-            const supplierInput =
-                row.querySelector(".supplier-input");
-
-            const processInput =
-                row.querySelector(".process-input");
-
-            const supplier =
-                parseInt(supplierInput.value || 0);
-
-            const process =
-                parseInt(processInput.value || 0);
-
-            data.push({
-                fault_name: faultName,
-                supplier: supplier,
-                process: process
-            });
-
-        });
-
-
-    const production = [];
-
-    document
-        .querySelectorAll("#productionBody tr")
-        .forEach(row => {
-
-            const modelInput =
-                row.querySelector(".model-name-input");
-
-            const countInput =
-                row.querySelector(".count-input");
-
-            const modelName =
-                modelInput.value.trim();
-
-            const count =
-                parseInt(countInput.value || 0);
-
-            if (modelName) {
-
-                production.push({
-                    model_name: modelName,
-                    production_count: count
                 });
+
+            } else {
+
+                addModel();
 
             }
 
-        });
+        } catch (error) {
 
-
-    try {
-
-        const response =
-            await fetch("/save", {
-
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-                    report_date: reportDate,
-                    shift: shift,
-                    data: data,
-                    production: production
-                })
-
-            });
-
-
-        const result =
-            await response.json();
-
-
-        if (result.success) {
+            console.error(error);
 
             showMessage(
-                "Data saved successfully.",
-                "success"
-            );
-
-        } else {
-
-            showMessage(
-                result.message || "Save failed.",
+                "Error loading data.",
                 "error"
             );
 
         }
 
-    } catch (error) {
-
-        console.error(error);
-
-        showMessage(
-            "Error saving data. Check Render logs.",
-            "error"
-        );
-
-    }
-
-}
-
-
-async function showDailyTotal() {
-
-    const reportDate =
-        document.getElementById("reportDate").value;
-
-    if (!reportDate) {
-
-        showMessage(
-            "Please select report date.",
-            "error"
-        );
-
-        return;
-
     }
 
 
-    try {
+    async function saveData() {
 
-        const response =
-            await fetch(
-                `/daily-total?report_date=${encodeURIComponent(reportDate)}`
+        const reportDate =
+            document.getElementById("reportDate").value;
+
+        const shift =
+            document.getElementById("shift").value;
+
+        if (!reportDate) {
+            showMessage(
+                "Please select Report Date.",
+                "error"
             );
+            return;
+        }
 
-        const result =
-            await response.json();
+        const data = [];
+
+        document
+            .querySelectorAll(".supplier-input")
+            .forEach(input => {
+
+                const faultName =
+                    input.dataset.fault;
+
+                const processInput =
+                    document.querySelector(
+                        `.process-input[data-fault="${CSS.escape(faultName)}"]`
+                    );
+
+                data.push({
+                    fault_name: faultName,
+                    supplier: parseInt(input.value) || 0,
+                    process: parseInt(processInput.value) || 0
+                });
+
+            });
 
 
-        if (!result.success) {
+        const production = [];
+
+        document
+            .querySelectorAll("#productionBody tr")
+            .forEach(row => {
+
+                const modelInput =
+                    row.querySelector(".production-model");
+
+                const countInput =
+                    row.querySelector(".production-count");
+
+                const modelName =
+                    modelInput.value.trim();
+
+                const count =
+                    parseInt(countInput.value) || 0;
+
+                if (modelName && count > 0) {
+
+                    production.push({
+                        model_name: modelName,
+                        production_count: count
+                    });
+
+                }
+
+            });
+
+
+        try {
+
+            const response =
+                await fetch("/save", {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        report_date: reportDate,
+                        shift: shift,
+                        data: data,
+                        production: production
+                    })
+
+                });
+
+
+            const result =
+                await response.json();
+
+            if (result.success) {
+
+                showMessage(
+                    "Data saved successfully."
+                );
+
+            } else {
+
+                showMessage(
+                    result.message || "Save failed.",
+                    "error"
+                );
+
+            }
+
+        } catch (error) {
+
+            console.error(error);
 
             showMessage(
-                "Error loading daily total.",
+                "Error saving data.",
+                "error"
+            );
+
+        }
+
+    }
+
+
+    async function showDailyTotal() {
+
+        const reportDate =
+            document.getElementById("dailyTotalDate").value;
+
+        if (!reportDate) {
+
+            showMessage(
+                "Please select Daily Total Date.",
                 "error"
             );
 
@@ -909,30 +784,66 @@ async function showDailyTotal() {
 
         }
 
-
-        document.getElementById("totalProduction").textContent =
-            result.production_total || 0;
-
-        document.getElementById("totalSupplier").textContent =
-            result.supplier_total || 0;
-
-        document.getElementById("totalProcess").textContent =
-            result.process_total || 0;
-
-        document.getElementById("totalRejection").textContent =
-            result.rejection_total || 0;
+        document
+            .getElementById("dailySection")
+            .classList.remove("hidden");
 
 
-        // Fault-wise
-        const faultBody =
-            document.getElementById("faultWiseBody");
+        try {
 
-        faultBody.innerHTML = "";
+            const response =
+                await fetch(
+                    `/daily-total?report_date=${encodeURIComponent(reportDate)}`
+                );
 
-        if (
-            result.rejection_by_fault &&
-            result.rejection_by_fault.length > 0
-        ) {
+            const result =
+                await response.json();
+
+
+            if (!result.success) {
+
+                showMessage(
+                    "Error loading daily total.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            document.getElementById(
+                "totalProduction"
+            ).textContent =
+                result.production_total;
+
+
+            document.getElementById(
+                "totalSupplier"
+            ).textContent =
+                result.supplier_total;
+
+
+            document.getElementById(
+                "totalProcess"
+            ).textContent =
+                result.process_total;
+
+
+            document.getElementById(
+                "totalRejection"
+            ).textContent =
+                result.rejection_total;
+
+
+            // Fault-wise rejection
+            const faultBody =
+                document.getElementById(
+                    "faultWiseBody"
+                );
+
+            faultBody.innerHTML = "";
+
 
             result.rejection_by_fault.forEach(item => {
 
@@ -940,53 +851,41 @@ async function showDailyTotal() {
                     document.createElement("tr");
 
                 row.innerHTML = `
-                    <td>${escapeHtml(item.fault_name)}</td>
-                    <td>${item.supplier || 0}</td>
-                    <td>${item.process || 0}</td>
-                    <td>${item.total || 0}</td>
+                    <td>${item.fault_name}</td>
+                    <td>${item.supplier}</td>
+                    <td>${item.process}</td>
+                    <td>${item.total}</td>
                 `;
 
                 faultBody.appendChild(row);
 
             });
 
-        } else {
 
-            faultBody.innerHTML = `
-                <tr>
-                    <td colspan="4">
-                        No rejection data
-                    </td>
-                </tr>
+            // Grand Total row
+            const totalRow =
+                document.createElement("tr");
+
+            totalRow.className = "grand-total";
+
+            totalRow.innerHTML = `
+                <td>Grand Total</td>
+                <td>${result.supplier_total}</td>
+                <td>${result.process_total}</td>
+                <td>${result.rejection_total}</td>
             `;
 
-        }
+            faultBody.appendChild(totalRow);
 
 
-        // Grand total row
-        const totalRow =
-            document.createElement("tr");
+            // Shift-wise production
+            const shiftBody =
+                document.getElementById(
+                    "shiftProductionBody"
+                );
 
-        totalRow.innerHTML = `
-            <th>Grand Total</th>
-            <th>${result.supplier_total || 0}</th>
-            <th>${result.process_total || 0}</th>
-            <th>${result.rejection_total || 0}</th>
-        `;
+            shiftBody.innerHTML = "";
 
-        faultBody.appendChild(totalRow);
-
-
-        // Shift-wise production
-        const shiftBody =
-            document.getElementById("shiftWiseBody");
-
-        shiftBody.innerHTML = "";
-
-        if (
-            result.production_by_shift &&
-            result.production_by_shift.length > 0
-        ) {
 
             result.production_by_shift.forEach(item => {
 
@@ -994,37 +893,23 @@ async function showDailyTotal() {
                     document.createElement("tr");
 
                 row.innerHTML = `
-                    <td>${escapeHtml(item.shift)}</td>
-                    <td>${item.production || 0}</td>
+                    <td>${item.shift}</td>
+                    <td>${item.production}</td>
                 `;
 
                 shiftBody.appendChild(row);
 
             });
 
-        } else {
 
-            shiftBody.innerHTML = `
-                <tr>
-                    <td colspan="2">
-                        No production data
-                    </td>
-                </tr>
-            `;
+            // Model-wise production
+            const modelBody =
+                document.getElementById(
+                    "modelProductionBody"
+                );
 
-        }
+            modelBody.innerHTML = "";
 
-
-        // Model-wise production
-        const modelBody =
-            document.getElementById("modelWiseBody");
-
-        modelBody.innerHTML = "";
-
-        if (
-            result.production_by_model &&
-            result.production_by_model.length > 0
-        ) {
 
             result.production_by_model.forEach(item => {
 
@@ -1032,233 +917,112 @@ async function showDailyTotal() {
                     document.createElement("tr");
 
                 row.innerHTML = `
-                    <td>${escapeHtml(item.model_name)}</td>
-                    <td>${item.production || 0}</td>
+                    <td>${item.model_name}</td>
+                    <td>${item.production}</td>
                 `;
 
                 modelBody.appendChild(row);
 
             });
 
-        } else {
+        } catch (error) {
 
-            modelBody.innerHTML = `
-                <tr>
-                    <td colspan="2">
-                        No production data
-                    </td>
-                </tr>
-            `;
-
-        }
-
-
-        document.getElementById("dailySection").style.display =
-            "block";
-
-
-    } catch (error) {
-
-        console.error(error);
-
-        showMessage(
-            "Error loading daily total. Check Render logs.",
-            "error"
-        );
-
-    }
-
-}
-
-
-function createCSV(rows) {
-
-    return rows
-        .map(row =>
-            row
-                .map(value =>
-                    `"${String(value).replace(/"/g, '""')}"`
-                )
-                .join(",")
-        )
-        .join("\n");
-
-}
-
-
-function downloadFile(filename, content) {
-
-    const blob =
-        new Blob(
-            [content],
-            { type: "text/csv;charset=utf-8;" }
-        );
-
-    const url =
-        URL.createObjectURL(blob);
-
-    const link =
-        document.createElement("a");
-
-    link.href = url;
-
-    link.download = filename;
-
-    document.body.appendChild(link);
-
-    link.click();
-
-    document.body.removeChild(link);
-
-    URL.revokeObjectURL(url);
-
-}
-
-
-function downloadShift() {
-
-    const reportDate =
-        document.getElementById("reportDate").value;
-
-    const shift =
-        document.getElementById("shift").value;
-
-    if (!reportDate) {
-
-        showMessage(
-            "Please select report date.",
-            "error"
-        );
-
-        return;
-
-    }
-
-
-    const rows = [];
-
-    rows.push([
-        "Report Date",
-        reportDate
-    ]);
-
-    rows.push([
-        "Shift",
-        shift
-    ]);
-
-    rows.push([]);
-
-    rows.push([
-        "Fault Name",
-        "Supplier",
-        "Process",
-        "Total"
-    ]);
-
-
-    document
-        .querySelectorAll("#rejectionBody tr")
-        .forEach(row => {
-
-            const fault =
-                row.children[0].textContent.trim();
-
-            const supplier =
-                parseInt(
-                    row.querySelector(".supplier-input").value || 0
-                );
-
-            const process =
-                parseInt(
-                    row.querySelector(".process-input").value || 0
-                );
-
-            rows.push([
-                fault,
-                supplier,
-                process,
-                supplier + process
-            ]);
-
-        });
-
-
-    rows.push([]);
-
-    rows.push([
-        "Model Name",
-        "Production Count"
-    ]);
-
-
-    document
-        .querySelectorAll("#productionBody tr")
-        .forEach(row => {
-
-            const model =
-                row.querySelector(".model-name-input").value.trim();
-
-            const count =
-                parseInt(
-                    row.querySelector(".count-input").value || 0
-                );
-
-            if (model) {
-
-                rows.push([
-                    model,
-                    count
-                ]);
-
-            }
-
-        });
-
-
-    const csv =
-        createCSV(rows);
-
-    downloadFile(
-        `${reportDate}_${shift}_QC_Report.csv`,
-        csv
-    );
-
-}
-
-
-async function downloadDay() {
-
-    const reportDate =
-        document.getElementById("reportDate").value;
-
-    if (!reportDate) {
-
-        showMessage(
-            "Please select report date.",
-            "error"
-        );
-
-        return;
-
-    }
-
-
-    try {
-
-        const response =
-            await fetch(
-                `/daily-total?report_date=${encodeURIComponent(reportDate)}`
-            );
-
-        const result =
-            await response.json();
-
-
-        if (!result.success) {
+            console.error(error);
 
             showMessage(
                 "Error loading daily total.",
+                "error"
+            );
+
+        }
+
+    }
+
+
+    function downloadShift() {
+
+        const reportDate =
+            document.getElementById("reportDate").value;
+
+        const shift =
+            document.getElementById("shift").value;
+
+        let csv =
+            "Fault Name,Supplier,Process,Total\n";
+
+
+        document
+            .querySelectorAll("#rejectionBody tr")
+            .forEach(row => {
+
+                const fault =
+                    row.cells[0].textContent.trim();
+
+                const supplier =
+                    row.querySelector(
+                        ".supplier-input"
+                    ).value || 0;
+
+                const process =
+                    row.querySelector(
+                        ".process-input"
+                    ).value || 0;
+
+                const total =
+                    Number(supplier) +
+                    Number(process);
+
+                csv +=
+                    `"${fault}",${supplier},${process},${total}\n`;
+
+            });
+
+
+        csv += "\nProduction Details\n";
+        csv += "Model Name,Production Count\n";
+
+
+        document
+            .querySelectorAll("#productionBody tr")
+            .forEach(row => {
+
+                const model =
+                    row.querySelector(
+                        ".production-model"
+                    ).value.trim();
+
+                const count =
+                    row.querySelector(
+                        ".production-count"
+                    ).value || 0;
+
+                if (model) {
+
+                    csv +=
+                        `"${model}",${count}\n`;
+
+                }
+
+            });
+
+
+        downloadCSV(
+            csv,
+            `QC_Report_${reportDate}_${shift}.csv`
+        );
+
+    }
+
+
+    async function downloadDay() {
+
+        const reportDate =
+            document.getElementById("dailyTotalDate").value;
+
+        if (!reportDate) {
+
+            showMessage(
+                "Please select Daily Total Date.",
                 "error"
             );
 
@@ -1267,233 +1031,225 @@ async function downloadDay() {
         }
 
 
-        const rows = [];
+        try {
 
-        rows.push([
-            "Daily QC Report",
-            reportDate
-        ]);
+            const response =
+                await fetch(
+                    `/daily-total?report_date=${encodeURIComponent(reportDate)}`
+                );
 
-        rows.push([]);
-
-        rows.push([
-            "Summary",
-            "Count"
-        ]);
-
-        rows.push([
-            "Total Production",
-            result.production_total || 0
-        ]);
-
-        rows.push([
-            "Supplier Rejection",
-            result.supplier_total || 0
-        ]);
-
-        rows.push([
-            "Process Rejection",
-            result.process_total || 0
-        ]);
-
-        rows.push([
-            "Total Rejection",
-            result.rejection_total || 0
-        ]);
-
-        rows.push([]);
+            const result =
+                await response.json();
 
 
-        rows.push([
-            "Fault",
-            "Supplier",
-            "Process",
-            "Total"
-        ]);
+            if (!result.success) {
+
+                showMessage(
+                    "Error loading daily total.",
+                    "error"
+                );
+
+                return;
+
+            }
 
 
-        (result.rejection_by_fault || [])
-            .forEach(item => {
+            let csv =
+                "Fault Name,Supplier,Process,Total\n";
 
-                rows.push([
-                    item.fault_name,
-                    item.supplier || 0,
-                    item.process || 0,
-                    item.total || 0
-                ]);
+
+            result.rejection_by_fault.forEach(item => {
+
+                csv +=
+                    `"${item.fault_name}",${item.supplier},${item.process},${item.total}\n`;
 
             });
 
 
-        rows.push([]);
-
-        rows.push([
-            "Shift",
-            "Production"
-        ]);
+            csv +=
+                `"Grand Total",${result.supplier_total},${result.process_total},${result.rejection_total}\n`;
 
 
-        (result.production_by_shift || [])
-            .forEach(item => {
+            csv += "\nShift-wise Production\n";
+            csv += "Shift,Production\n";
 
-                rows.push([
-                    item.shift,
-                    item.production || 0
-                ]);
+
+            result.production_by_shift.forEach(item => {
+
+                csv +=
+                    `"${item.shift}",${item.production}\n`;
 
             });
 
 
-        rows.push([]);
-
-        rows.push([
-            "Model Name",
-            "Production"
-        ]);
+            csv += "\nModel-wise Production\n";
+            csv += "Model Name,Production\n";
 
 
-        (result.production_by_model || [])
-            .forEach(item => {
+            result.production_by_model.forEach(item => {
 
-                rows.push([
-                    item.model_name,
-                    item.production || 0
-                ]);
+                csv +=
+                    `"${item.model_name}",${item.production}\n`;
 
             });
 
 
-        const csv =
-            createCSV(rows);
-
-        downloadFile(
-            `${reportDate}_Daily_QC_Report.csv`,
-            csv
-        );
-
-    } catch (error) {
-
-        console.error(error);
-
-        showMessage(
-            "Error downloading daily report.",
-            "error"
-        );
-
-    }
-
-}
-
-
-async function deleteData() {
-
-    const reportDate =
-        document.getElementById("reportDate").value;
-
-    const shift =
-        document.getElementById("shift").value;
-
-
-    if (!reportDate) {
-
-        showMessage(
-            "Please select report date.",
-            "error"
-        );
-
-        return;
-
-    }
-
-
-    const confirmed =
-        confirm(
-            `Delete data for ${reportDate} - ${shift}?`
-        );
-
-
-    if (!confirmed) {
-        return;
-    }
-
-
-    try {
-
-        const response =
-            await fetch(
-                `/delete?report_date=${encodeURIComponent(reportDate)}&shift=${encodeURIComponent(shift)}`,
-                {
-                    method: "DELETE"
-                }
+            downloadCSV(
+                csv,
+                `Daily_QC_Report_${reportDate}.csv`
             );
 
+        } catch (error) {
 
-        const result =
-            await response.json();
-
-
-        if (result.success) {
-
-            createRejectionRows();
-
-            document.getElementById("productionBody").innerHTML = "";
-
-            addProductionRow();
+            console.error(error);
 
             showMessage(
-                "Data deleted successfully.",
-                "success"
-            );
-
-        } else {
-
-            showMessage(
-                result.message || "Delete failed.",
+                "Error downloading daily report.",
                 "error"
             );
 
         }
 
-    } catch (error) {
+    }
 
-        console.error(error);
 
-        showMessage(
-            "Error deleting data. Check Render logs.",
-            "error"
-        );
+    function downloadCSV(csv, filename) {
+
+        const blob =
+            new Blob(
+                [csv],
+                { type: "text/csv;charset=utf-8;" }
+            );
+
+        const url =
+            URL.createObjectURL(blob);
+
+        const link =
+            document.createElement("a");
+
+        link.href = url;
+        link.download = filename;
+
+        document.body.appendChild(link);
+
+        link.click();
+
+        document.body.removeChild(link);
+
+        URL.revokeObjectURL(url);
 
     }
 
-}
+
+    async function deleteData() {
+
+        const reportDate =
+            document.getElementById("reportDate").value;
+
+        const shift =
+            document.getElementById("shift").value;
 
 
-// Date change
-document
-    .getElementById("reportDate")
-    .addEventListener("change", loadData);
+        if (!reportDate) {
+
+            showMessage(
+                "Please select Report Date.",
+                "error"
+            );
+
+            return;
+
+        }
 
 
-// Shift change
-document
-    .getElementById("shift")
-    .addEventListener("change", loadData);
+        const confirmed =
+            confirm(
+                `Delete all data for ${reportDate} - ${shift}?`
+            );
 
 
-// Initial page load
-document.addEventListener("DOMContentLoaded", () => {
+        if (!confirmed) {
+            return;
+        }
 
-    setToday();
 
-    createRejectionRows();
+        try {
 
-    addProductionRow();
+            const response =
+                await fetch(
+                    `/delete?report_date=${encodeURIComponent(reportDate)}&shift=${encodeURIComponent(shift)}`,
+                    {
+                        method: "DELETE"
+                    }
+                );
 
-    loadData();
 
-});
+            const result =
+                await response.json();
+
+
+            if (result.success) {
+
+                showMessage(
+                    "Data deleted successfully."
+                );
+
+                await loadData();
+
+            } else {
+
+                showMessage(
+                    result.message || "Delete failed.",
+                    "error"
+                );
+
+            }
+
+        } catch (error) {
+
+            console.error(error);
+
+            showMessage(
+                "Error deleting data.",
+                "error"
+            );
+
+        }
+
+    }
+
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        async function() {
+
+            setToday();
+
+            renderRejectionRows([]);
+
+            await loadData();
+
+        }
+    );
+
+
+    document
+        .getElementById("reportDate")
+        .addEventListener(
+            "change",
+            loadData
+        );
+
+
+    document
+        .getElementById("shift")
+        .addEventListener(
+            "change",
+            loadData
+        );
 
 </script>
 
 </body>
 </html>
+```
