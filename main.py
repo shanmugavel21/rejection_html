@@ -10,6 +10,8 @@ load_dotenv()
 
 app = FastAPI()
 
+BASE_DIR = Path(__file__).resolve().parent
+
 
 # =========================================================
 # DATABASE CONNECTION
@@ -46,10 +48,9 @@ FAULTS = [
     ("Conveyor", "Fixed Tray - Jumbo"),
     ("Conveyor", "Bundy Tube Damage"),
     ("Conveyor", "Bundy Tube Leak"),
-    ("Conveyor", "Mixing Tube Fault - Small"),
-    ("Conveyor", "Mixing Tube Fault - Big"),
-    ("Conveyor", "Mixing Tube Fault - Jumbo"),
-
+    ("Process", "Mixing Tube Fault - Small"),
+    ("Process", "Mixing Tube Fault - Big"),
+    ("Process", "Mixing Tube Fault - Jumbo"),
     ("Process", "Mixing Tube Broken"),
     ("Process", "Sim OFF"),
     ("Process", "Sim HIGH"),
@@ -69,10 +70,9 @@ FAULTS = [
     ("Process", "Dry Air Leak Testing")
 ]
 
-
 FAULT_TO_SECTION = {
-    fault: section
-    for section, fault in FAULTS
+    fault_name: section
+    for section, fault_name in FAULTS
 }
 
 
@@ -81,41 +81,29 @@ FAULT_TO_SECTION = {
 # =========================================================
 
 def create_production_table():
+    conn = get_connection()
 
-    with get_connection() as conn:
-
+    try:
         with conn.cursor() as cur:
-
             cur.execute("""
                 CREATE TABLE IF NOT EXISTS production_register (
                     id SERIAL PRIMARY KEY,
-
                     report_date DATE NOT NULL,
-
                     shift VARCHAR(50) NOT NULL,
-
                     model_name VARCHAR(200) NOT NULL,
-
                     production_count INTEGER NOT NULL DEFAULT 0,
-
-                    UNIQUE (
-                        report_date,
-                        shift,
-                        model_name
-                    )
+                    UNIQUE(report_date, shift, model_name)
                 )
             """)
 
         conn.commit()
 
+    finally:
+        conn.close()
 
-# =========================================================
-# STARTUP
-# =========================================================
 
 @app.on_event("startup")
-def startup():
-
+def startup_event():
     create_production_table()
 
 
@@ -125,30 +113,43 @@ def startup():
 
 @app.get("/", response_class=HTMLResponse)
 def home():
+    html_path = BASE_DIR / "templates" / "index.html"
 
-    html_file = (
-        Path(__file__).resolve().parent
-        / "templates"
-        / "index.html"
-    )
-
-    return html_file.read_text(
-        encoding="utf-8"
-    )
+    return html_path.read_text(encoding="utf-8")
 
 
 # =========================================================
-# GET REJECTION DATA
+# MODELS
+# =========================================================
+
+class RejectionItem(BaseModel):
+    fault_name: str
+    supplier: int = 0
+    process: int = 0
+
+
+class ProductionItem(BaseModel):
+    model_name: str
+    production_count: int = 0
+
+
+class RejectionData(BaseModel):
+    report_date: str
+    shift: str
+    data: list[RejectionItem] = []
+    production: list[ProductionItem] = []
+
+
+# =========================================================
+# LOAD REJECTION DATA
 # =========================================================
 
 @app.get("/rejections")
-def get_rejections(
-    report_date: str,
-    shift: str
-):
+def get_rejections(report_date: str, shift: str):
 
-    with get_connection() as conn:
+    conn = get_connection()
 
+    try:
         with conn.cursor() as cur:
 
             cur.execute("""
@@ -156,123 +157,87 @@ def get_rejections(
                     fault_name,
                     supplier_rejection,
                     process_rejection
-
                 FROM rejection_register
-
                 WHERE report_date = %s
-                AND shift = %s
-
-                ORDER BY id
-            """, (
-                report_date,
-                shift
-            ))
+                  AND shift = %s
+            """, (report_date, shift))
 
             rows = cur.fetchall()
 
-    saved_data = {
-        row[0]: {
-            "supplier": row[1] or 0,
-            "process": row[2] or 0
-        }
-        for row in rows
-    }
+            saved_data = {}
 
-    data = []
+            for row in rows:
+                saved_data[row[0]] = {
+                    "supplier": row[1] or 0,
+                    "process": row[2] or 0
+                }
 
-    for section, fault in FAULTS:
+            result = []
 
-        saved = saved_data.get(
-            fault,
-            {
-                "supplier": 0,
-                "process": 0
+            for section, fault_name in FAULTS:
+
+                values = saved_data.get(
+                    fault_name,
+                    {
+                        "supplier": 0,
+                        "process": 0
+                    }
+                )
+
+                result.append({
+                    "fault_name": fault_name,
+                    "supplier": values["supplier"],
+                    "process": values["process"]
+                })
+
+            return {
+                "success": True,
+                "data": result
             }
-        )
 
-        data.append({
-            "section": section,
-            "fault_name": fault,
-            "supplier": saved["supplier"],
-            "process": saved["process"]
-        })
-
-    return data
+    finally:
+        conn.close()
 
 
 # =========================================================
-# GET PRODUCTION DATA
+# LOAD PRODUCTION DATA
 # =========================================================
 
 @app.get("/production")
-def get_production(
-    report_date: str,
-    shift: str
-):
+def get_production(report_date: str, shift: str):
 
-    with get_connection() as conn:
+    conn = get_connection()
 
+    try:
         with conn.cursor() as cur:
 
             cur.execute("""
                 SELECT
                     model_name,
                     production_count
-
                 FROM production_register
-
                 WHERE report_date = %s
-                AND shift = %s
-
+                  AND shift = %s
                 ORDER BY id
-            """, (
-                report_date,
-                shift
-            ))
+            """, (report_date, shift))
 
             rows = cur.fetchall()
 
-    data = []
+            result = []
 
-    for row in rows:
+            for row in rows:
+                result.append({
+                    "model_name": row[0],
+                    "production_count": row[1] or 0
+                })
 
-        data.append({
-            "model_name": row[0],
-            "production_count": row[1]
-        })
+            return {
+                "success": True,
+                "data": result
+            }
 
-    return data
-
-
-# =========================================================
-# SAVE DATA MODELS
-# =========================================================
-
-class RejectionItem(BaseModel):
-
-    fault_name: str
-
-    supplier: int = 0
-
-    process: int = 0
-
-
-class ProductionItem(BaseModel):
-
-    model_name: str
-
-    production_count: int = 0
-
-
-class RejectionData(BaseModel):
-
-    report_date: str
-
-    shift: str
-
-    data: list[RejectionItem] = []
-
-    production: list[ProductionItem] = []
+    finally:
+        conn.close()
 
 
 # =========================================================
@@ -280,168 +245,122 @@ class RejectionData(BaseModel):
 # =========================================================
 
 @app.post("/save")
-def save_data(
-    payload: RejectionData
-):
+def save_data(payload: RejectionData):
 
-    with get_connection() as conn:
+    conn = get_connection()
+
+    try:
 
         with conn.cursor() as cur:
 
-            try:
+            # ---------------------------------------------
+            # DELETE OLD REJECTION DATA
+            # ---------------------------------------------
 
-                # -----------------------------------------
-                # DELETE OLD REJECTION DATA
-                # -----------------------------------------
+            cur.execute("""
+                DELETE FROM rejection_register
+                WHERE report_date = %s
+                  AND shift = %s
+            """, (
+                payload.report_date,
+                payload.shift
+            ))
+
+            # ---------------------------------------------
+            # INSERT REJECTION DATA
+            # ---------------------------------------------
+
+            for item in payload.data:
+
+                supplier = item.supplier or 0
+                process = item.process or 0
+
+                if supplier == 0 and process == 0:
+                    continue
+
+                section = FAULT_TO_SECTION.get(
+                    item.fault_name,
+                    "Process"
+                )
 
                 cur.execute("""
-                    DELETE FROM rejection_register
-                    WHERE report_date = %s
-                    AND shift = %s
-                """, (
-                    payload.report_date,
-                    payload.shift
-                ))
-
-                # -----------------------------------------
-                # INSERT REJECTION DATA
-                # -----------------------------------------
-
-                for item in payload.data:
-
-                    supplier = int(
-                        item.supplier or 0
-                    )
-
-                    process = int(
-                        item.process or 0
-                    )
-
-                    if supplier == 0 and process == 0:
-                        continue
-
-                    section = FAULT_TO_SECTION.get(
-                        item.fault_name,
-                        "Conveyor"
-                    )
-
-                    cur.execute("""
-                        INSERT INTO rejection_register
-                        (
-                            report_date,
-                            shift,
-                            section,
-                            fault_name,
-                            supplier_rejection,
-                            process_rejection
-                        )
-
-                        VALUES
-                        (%s, %s, %s, %s, %s, %s)
-
-                        ON CONFLICT
-                        (
-                            report_date,
-                            shift,
-                            section,
-                            fault_name
-                        )
-
-                        DO UPDATE SET
-
-                            supplier_rejection =
-                                EXCLUDED.supplier_rejection,
-
-                            process_rejection =
-                                EXCLUDED.process_rejection
-                    """, (
-                        payload.report_date,
-                        payload.shift,
+                    INSERT INTO rejection_register
+                    (
+                        report_date,
+                        shift,
                         section,
-                        item.fault_name,
-                        supplier,
-                        process
-                    ))
-
-                # -----------------------------------------
-                # DELETE OLD PRODUCTION DATA
-                # -----------------------------------------
-
-                cur.execute("""
-                    DELETE FROM production_register
-                    WHERE report_date = %s
-                    AND shift = %s
+                        fault_name,
+                        supplier_rejection,
+                        process_rejection
+                    )
+                    VALUES (%s, %s, %s, %s, %s, %s)
                 """, (
                     payload.report_date,
-                    payload.shift
+                    payload.shift,
+                    section,
+                    item.fault_name,
+                    supplier,
+                    process
                 ))
 
-                # -----------------------------------------
-                # INSERT PRODUCTION DATA
-                # -----------------------------------------
+            # ---------------------------------------------
+            # DELETE OLD PRODUCTION DATA
+            # ---------------------------------------------
 
-                for item in payload.production:
+            cur.execute("""
+                DELETE FROM production_register
+                WHERE report_date = %s
+                  AND shift = %s
+            """, (
+                payload.report_date,
+                payload.shift
+            ))
 
-                    model_name = item.model_name.strip()
+            # ---------------------------------------------
+            # INSERT PRODUCTION DATA
+            # ---------------------------------------------
 
-                    count = int(
-                        item.production_count or 0
-                    )
+            for item in payload.production:
 
-                    if model_name == "":
-                        continue
+                count = item.production_count or 0
 
-                    if count <= 0:
-                        continue
+                if count <= 0:
+                    continue
 
-                    cur.execute("""
-                        INSERT INTO production_register
-                        (
-                            report_date,
-                            shift,
-                            model_name,
-                            production_count
-                        )
-
-                        VALUES
-                        (%s, %s, %s, %s)
-
-                        ON CONFLICT
-                        (
-                            report_date,
-                            shift,
-                            model_name
-                        )
-
-                        DO UPDATE SET
-
-                            production_count =
-                                EXCLUDED.production_count
-                    """, (
-                        payload.report_date,
-                        payload.shift,
+                cur.execute("""
+                    INSERT INTO production_register
+                    (
+                        report_date,
+                        shift,
                         model_name,
-                        count
-                    ))
+                        production_count
+                    )
+                    VALUES (%s, %s, %s, %s)
+                """, (
+                    payload.report_date,
+                    payload.shift,
+                    item.model_name,
+                    count
+                ))
 
-                conn.commit()
+        conn.commit()
 
-                return {
-                    "success": True,
-                    "message":
-                        f"Saved successfully — "
-                        f"{payload.report_date} | "
-                        f"{payload.shift}"
-                }
+        return {
+            "success": True,
+            "message": "Data saved successfully"
+        }
 
-            except Exception as e:
+    except Exception as e:
 
-                conn.rollback()
+        conn.rollback()
 
-                return {
-                    "success": False,
-                    "message": str(e)
-                }
+        return {
+            "success": False,
+            "message": str(e)
+        }
+
+    finally:
+        conn.close()
 
 
 # =========================================================
@@ -449,105 +368,103 @@ def save_data(
 # =========================================================
 
 @app.get("/daily-total")
-def daily_total(
-    report_date: str
-):
+def daily_total(report_date: str):
 
-    with get_connection() as conn:
+    conn = get_connection()
+
+    try:
 
         with conn.cursor() as cur:
 
-            # -----------------------------------------
-            # SUPPLIER + PROCESS REJECTION
-            # -----------------------------------------
+            # =================================================
+            # OVERALL REJECTION TOTAL
+            # =================================================
 
             cur.execute("""
                 SELECT
-                    COALESCE(
-                        SUM(supplier_rejection),
-                        0
-                    ),
-                    COALESCE(
-                        SUM(process_rejection),
-                        0
-                    )
-
+                    COALESCE(SUM(supplier_rejection), 0),
+                    COALESCE(SUM(process_rejection), 0)
                 FROM rejection_register
-
                 WHERE report_date = %s
-            """, (
-                report_date,
-            ))
+            """, (report_date,))
 
             rejection_row = cur.fetchone()
 
             supplier_total = rejection_row[0] or 0
-
             process_total = rejection_row[1] or 0
 
             rejection_total = (
-                supplier_total
-                + process_total
+                supplier_total +
+                process_total
             )
 
-            # -----------------------------------------
+            # =================================================
             # TOTAL PRODUCTION
-            # -----------------------------------------
+            # =================================================
 
             cur.execute("""
                 SELECT
-                    COALESCE(
-                        SUM(production_count),
-                        0
-                    )
-
+                    COALESCE(SUM(production_count), 0)
                 FROM production_register
-
                 WHERE report_date = %s
-            """, (
-                report_date,
-            ))
+            """, (report_date,))
 
-            production_total = (
-                cur.fetchone()[0] or 0
-            )
+            production_row = cur.fetchone()
 
-            # -----------------------------------------
+            production_total = production_row[0] or 0
+
+            # =================================================
+            # FAULT-WISE REJECTION TOTAL
+            # =================================================
+
+            cur.execute("""
+                SELECT
+                    fault_name,
+                    COALESCE(SUM(supplier_rejection), 0) AS supplier_total,
+                    COALESCE(SUM(process_rejection), 0) AS process_total
+                FROM rejection_register
+                WHERE report_date = %s
+                GROUP BY fault_name
+                ORDER BY MIN(id)
+            """, (report_date,))
+
+            fault_rows = cur.fetchall()
+
+            rejection_by_fault = []
+
+            for row in fault_rows:
+
+                fault_name = row[0]
+                supplier = row[1] or 0
+                process = row[2] or 0
+
+                rejection_by_fault.append({
+                    "fault_name": fault_name,
+                    "supplier": supplier,
+                    "process": process,
+                    "total": supplier + process
+                })
+
+            # =================================================
             # SHIFT-WISE PRODUCTION
-            # -----------------------------------------
+            # =================================================
 
             cur.execute("""
                 SELECT
                     shift,
-                    COALESCE(
-                        SUM(production_count),
-                        0
-                    )
-
+                    COALESCE(SUM(production_count), 0)
                 FROM production_register
-
                 WHERE report_date = %s
-
                 GROUP BY shift
-
-                ORDER BY
-                    CASE
-                        WHEN shift = '1st Shift'
-                            THEN 1
-
-                        WHEN shift = 'General Shift'
-                            THEN 2
-
-                        WHEN shift = '2nd Shift'
-                            THEN 3
-
-                        ELSE 4
-                    END
-            """, (
-                report_date,
-            ))
+            """, (report_date,))
 
             shift_rows = cur.fetchall()
+
+            shift_order = {
+                "1st Shift": 1,
+                "General Shift": 2,
+                "2nd Shift": 3
+            }
 
             production_by_shift = []
 
@@ -555,31 +472,29 @@ def daily_total(
 
                 production_by_shift.append({
                     "shift": row[0],
-                    "count": row[1] or 0
+                    "production": row[1] or 0
                 })
 
-            # -----------------------------------------
+            production_by_shift.sort(
+                key=lambda x: shift_order.get(
+                    x["shift"],
+                    99
+                )
+            )
+
+            # =================================================
             # MODEL-WISE PRODUCTION
-            # -----------------------------------------
+            # =================================================
 
             cur.execute("""
                 SELECT
                     model_name,
-                    COALESCE(
-                        SUM(production_count),
-                        0
-                    )
-
+                    COALESCE(SUM(production_count), 0)
                 FROM production_register
-
                 WHERE report_date = %s
-
                 GROUP BY model_name
-
                 ORDER BY model_name
-            """, (
-                report_date,
-            ))
+            """, (report_date,))
 
             model_rows = cur.fetchall()
 
@@ -589,104 +504,80 @@ def daily_total(
 
                 production_by_model.append({
                     "model_name": row[0],
-                    "count": row[1] or 0
+                    "production": row[1] or 0
                 })
 
-    # -----------------------------------------
-    # FINAL RESPONSE
-    # -----------------------------------------
+            # =================================================
+            # FINAL RESPONSE
+            # =================================================
 
-    return {
-        "success": True,
+            return {
+                "success": True,
+                "report_date": report_date,
 
-        "report_date": report_date,
+                "production_total": production_total,
 
-        "production_total":
-            production_total,
+                "supplier_total": supplier_total,
+                "process_total": process_total,
+                "rejection_total": rejection_total,
 
-        "supplier_total":
-            supplier_total,
+                "rejection_by_fault": rejection_by_fault,
 
-        "process_total":
-            process_total,
+                "production_by_shift": production_by_shift,
 
-        "rejection_total":
-            rejection_total,
+                "production_by_model": production_by_model
+            }
 
-        "production_by_shift":
-            production_by_shift,
-
-        "production_by_model":
-            production_by_model
-    }
+    finally:
+        conn.close()
 
 
 # =========================================================
-# DELETE DATE + SHIFT
+# DELETE DATE + SHIFT DATA
 # =========================================================
 
 @app.delete("/delete")
-def delete_data(
-    report_date: str,
-    shift: str
-):
+def delete_data(report_date: str, shift: str):
 
-    with get_connection() as conn:
+    conn = get_connection()
+
+    try:
 
         with conn.cursor() as cur:
 
-            try:
+            cur.execute("""
+                DELETE FROM rejection_register
+                WHERE report_date = %s
+                  AND shift = %s
+            """, (
+                report_date,
+                shift
+            ))
 
-                # -----------------------------------------
-                # DELETE REJECTION
-                # -----------------------------------------
+            cur.execute("""
+                DELETE FROM production_register
+                WHERE report_date = %s
+                  AND shift = %s
+            """, (
+                report_date,
+                shift
+            ))
 
-                cur.execute("""
-                    DELETE FROM rejection_register
-                    WHERE report_date = %s
-                    AND shift = %s
-                """, (
-                    report_date,
-                    shift
-                ))
+        conn.commit()
 
-                rejection_deleted = cur.rowcount
+        return {
+            "success": True,
+            "message": "Data deleted successfully"
+        }
 
-                # -----------------------------------------
-                # DELETE PRODUCTION
-                # -----------------------------------------
+    except Exception as e:
 
-                cur.execute("""
-                    DELETE FROM production_register
-                    WHERE report_date = %s
-                    AND shift = %s
-                """, (
-                    report_date,
-                    shift
-                ))
+        conn.rollback()
 
-                production_deleted = cur.rowcount
+        return {
+            "success": False,
+            "message": str(e)
+        }
 
-                conn.commit()
-
-                return {
-                    "success": True,
-
-                    "rejection_deleted":
-                        rejection_deleted,
-
-                    "production_deleted":
-                        production_deleted,
-
-                    "message":
-                        "Data deleted successfully"
-                }
-
-            except Exception as e:
-
-                conn.rollback()
-
-                return {
-                    "success": False,
-                    "message": str(e)
-                }
+    finally:
+        conn.close()
