@@ -1,4 +1,4 @@
- from fastapi import FastAPI
+from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from pathlib import Path
 from pydantic import BaseModel
