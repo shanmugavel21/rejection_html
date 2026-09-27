@@ -1,3 +1,4 @@
+```python
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from pathlib import Path
@@ -170,20 +171,15 @@ def get_rejections(
 
             rows = cur.fetchall()
 
-
     saved_data = {
-
         row[0]: {
             "supplier": row[1] or 0,
             "process": row[2] or 0
         }
-
         for row in rows
     }
 
-
     data = []
-
 
     for section, fault in FAULTS:
 
@@ -195,19 +191,12 @@ def get_rejections(
             }
         )
 
-
         data.append({
-
             "section": section,
-
             "fault_name": fault,
-
             "supplier": saved["supplier"],
-
             "process": saved["process"]
-
         })
-
 
     return data
 
@@ -244,20 +233,14 @@ def get_production(
 
             rows = cur.fetchall()
 
-
     data = []
-
 
     for row in rows:
 
         data.append({
-
             "model_name": row[0],
-
             "production_count": row[1]
-
         })
-
 
     return data
 
@@ -310,19 +293,16 @@ def save_data(
 
                 # -----------------------------------------
                 # DELETE OLD REJECTION DATA
-                # FOR THIS DATE + SHIFT
                 # -----------------------------------------
 
                 cur.execute("""
                     DELETE FROM rejection_register
-
                     WHERE report_date = %s
                     AND shift = %s
                 """, (
                     payload.report_date,
                     payload.shift
                 ))
-
 
                 # -----------------------------------------
                 # INSERT REJECTION DATA
@@ -338,18 +318,13 @@ def save_data(
                         item.process or 0
                     )
 
-
-                    # Skip zero values
-
                     if supplier == 0 and process == 0:
                         continue
-
 
                     section = FAULT_TO_SECTION.get(
                         item.fault_name,
                         "Conveyor"
                     )
-
 
                     cur.execute("""
                         INSERT INTO rejection_register
@@ -389,15 +364,12 @@ def save_data(
                         process
                     ))
 
-
                 # -----------------------------------------
                 # DELETE OLD PRODUCTION DATA
-                # FOR THIS DATE + SHIFT
                 # -----------------------------------------
 
                 cur.execute("""
                     DELETE FROM production_register
-
                     WHERE report_date = %s
                     AND shift = %s
                 """, (
@@ -405,29 +377,23 @@ def save_data(
                     payload.shift
                 ))
 
-
                 # -----------------------------------------
                 # INSERT PRODUCTION DATA
                 # -----------------------------------------
 
                 for item in payload.production:
 
-                    model_name = (
-                        item.model_name.strip()
-                    )
+                    model_name = item.model_name.strip()
 
                     count = int(
                         item.production_count or 0
                     )
 
-
                     if model_name == "":
                         continue
 
-
                     if count <= 0:
                         continue
-
 
                     cur.execute("""
                         INSERT INTO production_register
@@ -459,33 +425,23 @@ def save_data(
                         count
                     ))
 
-
                 conn.commit()
 
-
                 return {
-
                     "success": True,
-
                     "message":
                         f"Saved successfully — "
                         f"{payload.report_date} | "
                         f"{payload.shift}"
-
                 }
-
 
             except Exception as e:
 
                 conn.rollback()
 
-
                 return {
-
                     "success": False,
-
                     "message": str(e)
-
                 }
 
 
@@ -508,12 +464,10 @@ def daily_total(
 
             cur.execute("""
                 SELECT
-
                     COALESCE(
                         SUM(supplier_rejection),
                         0
                     ),
-
                     COALESCE(
                         SUM(process_rejection),
                         0
@@ -523,29 +477,19 @@ def daily_total(
 
                 WHERE report_date = %s
             """, (
-                report_date
+                report_date,
             ))
-
 
             rejection_row = cur.fetchone()
 
+            supplier_total = rejection_row[0] or 0
 
-            supplier_total = (
-                rejection_row[0] or 0
-            )
-
-
-            process_total = (
-                rejection_row[1] or 0
-            )
-
+            process_total = rejection_row[1] or 0
 
             rejection_total = (
                 supplier_total
-                +
-                process_total
+                + process_total
             )
-
 
             # -----------------------------------------
             # TOTAL PRODUCTION
@@ -553,7 +497,6 @@ def daily_total(
 
             cur.execute("""
                 SELECT
-
                     COALESCE(
                         SUM(production_count),
                         0
@@ -563,14 +506,12 @@ def daily_total(
 
                 WHERE report_date = %s
             """, (
-                report_date
+                report_date,
             ))
-
 
             production_total = (
                 cur.fetchone()[0] or 0
             )
-
 
             # -----------------------------------------
             # SHIFT-WISE PRODUCTION
@@ -578,9 +519,7 @@ def daily_total(
 
             cur.execute("""
                 SELECT
-
                     shift,
-
                     COALESCE(
                         SUM(production_count),
                         0
@@ -593,9 +532,7 @@ def daily_total(
                 GROUP BY shift
 
                 ORDER BY
-
                     CASE
-
                         WHEN shift = '1st Shift'
                             THEN 1
 
@@ -606,29 +543,21 @@ def daily_total(
                             THEN 3
 
                         ELSE 4
-
                     END
             """, (
-                report_date
+                report_date,
             ))
-
 
             shift_rows = cur.fetchall()
 
-
             production_by_shift = []
-
 
             for row in shift_rows:
 
                 production_by_shift.append({
-
                     "shift": row[0],
-
                     "count": row[1] or 0
-
                 })
-
 
             # -----------------------------------------
             # MODEL-WISE PRODUCTION
@@ -636,9 +565,7 @@ def daily_total(
 
             cur.execute("""
                 SELECT
-
                     model_name,
-
                     COALESCE(
                         SUM(production_count),
                         0
@@ -652,29 +579,25 @@ def daily_total(
 
                 ORDER BY model_name
             """, (
-                report_date
+                report_date,
             ))
-
 
             model_rows = cur.fetchall()
 
-
             production_by_model = []
-
 
             for row in model_rows:
 
                 production_by_model.append({
-
                     "model_name": row[0],
-
                     "count": row[1] or 0
-
                 })
 
+    # -----------------------------------------
+    # FINAL RESPONSE
+    # -----------------------------------------
 
     return {
-
         "success": True,
 
         "report_date": report_date,
@@ -696,7 +619,6 @@ def daily_total(
 
         "production_by_model":
             production_by_model
-
     }
 
 
@@ -722,7 +644,6 @@ def delete_data(
 
                 cur.execute("""
                     DELETE FROM rejection_register
-
                     WHERE report_date = %s
                     AND shift = %s
                 """, (
@@ -730,9 +651,7 @@ def delete_data(
                     shift
                 ))
 
-
                 rejection_deleted = cur.rowcount
-
 
                 # -----------------------------------------
                 # DELETE PRODUCTION
@@ -740,7 +659,6 @@ def delete_data(
 
                 cur.execute("""
                     DELETE FROM production_register
-
                     WHERE report_date = %s
                     AND shift = %s
                 """, (
@@ -748,15 +666,11 @@ def delete_data(
                     shift
                 ))
 
-
                 production_deleted = cur.rowcount
-
 
                 conn.commit()
 
-
                 return {
-
                     "success": True,
 
                     "rejection_deleted":
@@ -767,19 +681,14 @@ def delete_data(
 
                     "message":
                         "Data deleted successfully"
-
                 }
-
 
             except Exception as e:
 
                 conn.rollback()
 
-
                 return {
-
                     "success": False,
-
                     "message": str(e)
-
                 }
+```
