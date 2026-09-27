@@ -14,87 +14,143 @@
 
 <style>
 
+/* =====================================================
+   BASIC
+===================================================== */
+
 * {
     box-sizing: border-box;
 }
 
+html {
+    width: 100%;
+    overflow-x: hidden;
+}
+
 body {
     margin: 0;
-    padding: 15px;
-    font-family: Arial, sans-serif;
+    padding: 12px;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
     background: #f4f6f8;
     color: #222;
 }
 
 .container {
+    width: 100%;
     max-width: 1200px;
-    margin: auto;
+    margin: 0 auto;
 }
+
+
+/* =====================================================
+   HEADINGS
+===================================================== */
 
 h1 {
     text-align: center;
-    margin-bottom: 20px;
+    font-size: 25px;
+    margin: 8px 0 18px;
 }
 
 h2 {
-    margin-top: 25px;
+    font-size: 20px;
+    margin: 22px 0 12px;
 }
 
 h3 {
-    margin-top: 25px;
+    font-size: 18px;
+    margin: 22px 0 10px;
 }
+
+
+/* =====================================================
+   CONTROLS
+===================================================== */
 
 .controls {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
+    width: 100%;
     margin-bottom: 15px;
 }
 
-.controls label {
+.control-box {
+    flex: 1;
+    min-width: 180px;
+}
+
+.control-box label {
+    display: block;
     font-weight: bold;
+    margin-bottom: 5px;
 }
 
 input,
 select,
 button {
-    padding: 10px;
+    font-family: inherit;
     font-size: 15px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
 }
 
-button {
-    cursor: pointer;
-    font-weight: bold;
+input,
+select {
+    width: 100%;
+    min-height: 42px;
+    padding: 9px 10px;
+
+    border: 1px solid #c9c9c9;
+    border-radius: 7px;
+    background: white;
 }
 
-button:hover {
-    opacity: 0.9;
-}
+
+/* =====================================================
+   TABLE WRAPPER
+===================================================== */
 
 .table-wrapper {
     width: 100%;
+    max-width: 100%;
     overflow-x: auto;
+    overflow-y: hidden;
+
     background: white;
     border-radius: 8px;
+
+    -webkit-overflow-scrolling: touch;
 }
+
+
+/* =====================================================
+   TABLE
+===================================================== */
 
 table {
     width: 100%;
+    min-width: 620px;
     border-collapse: collapse;
-    min-width: 600px;
 }
 
 th,
 td {
-    border: 1px solid #ddd;
-    padding: 8px;
+    border: 1px solid #d8d8d8;
+    padding: 9px 8px;
     text-align: center;
+    white-space: nowrap;
 }
 
 th {
     background: #e9ecef;
+    font-weight: bold;
 }
 
 td:first-child,
@@ -102,27 +158,86 @@ th:first-child {
     text-align: left;
 }
 
+
+/* =====================================================
+   REJECTION INPUT
+===================================================== */
+
 .rejection-input {
-    width: 90px;
+    width: 90px !important;
+    min-height: 42px;
+
+    text-align: center;
+
+    padding: 7px;
+
+    border: 1px solid #bbb;
+    border-radius: 6px;
+}
+
+
+/* =====================================================
+   PRODUCTION INPUT
+===================================================== */
+
+.model-input {
+    min-width: 220px;
+}
+
+.count-input {
+    min-width: 120px;
     text-align: center;
 }
 
-.production-input {
-    width: 100%;
-}
+
+/* =====================================================
+   BUTTONS
+===================================================== */
 
 .action-buttons {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
+    display: grid;
+
+    grid-template-columns:
+        repeat(5, 1fr);
+
+    gap: 8px;
+
     margin-top: 15px;
 }
 
-.message {
-    margin-top: 15px;
+.action-buttons button {
+    min-height: 44px;
+
     padding: 10px;
-    border-radius: 6px;
+
+    border: none;
+    border-radius: 7px;
+
+    background: #333;
+    color: white;
+
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.action-buttons button:hover {
+    opacity: 0.9;
+}
+
+
+/* =====================================================
+   MESSAGE
+===================================================== */
+
+.message {
     display: none;
+
+    margin-top: 12px;
+    padding: 10px;
+
+    border-radius: 7px;
+
+    font-weight: bold;
 }
 
 .success {
@@ -135,35 +250,63 @@ th:first-child {
     color: #721c24;
 }
 
+
+/* =====================================================
+   DAILY TOTAL
+===================================================== */
+
 .daily-total {
     display: none;
+
+    width: 100%;
+
     margin-top: 25px;
+
+    padding-bottom: 30px;
 }
+
+
+/* =====================================================
+   TOTAL CARDS
+===================================================== */
 
 .total-cards {
     display: grid;
+
     grid-template-columns:
-        repeat(auto-fit, minmax(160px, 1fr));
+        repeat(4, 1fr);
+
     gap: 10px;
+
     margin-bottom: 20px;
 }
 
 .total-card {
     background: white;
+
     border: 1px solid #ddd;
     border-radius: 8px;
-    padding: 15px;
+
+    padding: 14px;
+
     text-align: center;
 }
 
 .total-card h4 {
-    margin: 0 0 8px 0;
+    margin: 0 0 8px;
+
+    font-size: 14px;
 }
 
 .total-card .value {
-    font-size: 25px;
+    font-size: 24px;
     font-weight: bold;
 }
+
+
+/* =====================================================
+   DAILY TABLE
+===================================================== */
 
 .daily-table {
     margin-bottom: 20px;
@@ -174,24 +317,152 @@ th:first-child {
     background: #f0f0f0;
 }
 
-@media (max-width: 600px) {
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 700px) {
 
     body {
         padding: 8px;
     }
 
     h1 {
-        font-size: 22px;
+        font-size: 21px;
+        margin-top: 5px;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    h3 {
+        font-size: 17px;
+    }
+
+    .controls {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    .control-box {
+        min-width: 0;
     }
 
     input,
-    select,
-    button {
+    select {
+        min-height: 44px;
+        font-size: 16px;
+    }
+
+    table {
+        min-width: 600px;
+    }
+
+    th,
+    td {
+        padding: 8px 7px;
         font-size: 14px;
     }
 
     .rejection-input {
-        width: 70px;
+        width: 75px !important;
+        min-height: 44px;
+        font-size: 16px;
+    }
+
+    .action-buttons {
+        grid-template-columns:
+            repeat(2, 1fr);
+
+        gap: 8px;
+    }
+
+    .action-buttons button {
+        min-height: 46px;
+        font-size: 14px;
+    }
+
+    .total-cards {
+        grid-template-columns:
+            repeat(2, 1fr);
+
+        gap: 8px;
+    }
+
+    .total-card {
+        padding: 12px 8px;
+    }
+
+    .total-card h4 {
+        font-size: 13px;
+    }
+
+    .total-card .value {
+        font-size: 22px;
+    }
+
+}
+
+
+/* =====================================================
+   SMALL MOBILE
+===================================================== */
+
+@media (max-width: 420px) {
+
+    body {
+        padding: 6px;
+    }
+
+    h1 {
+        font-size: 19px;
+    }
+
+    .controls {
+        grid-template-columns: 1fr;
+    }
+
+    .action-buttons {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .action-buttons button {
+        font-size: 13px;
+    }
+
+    .total-cards {
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+    .total-card .value {
+        font-size: 20px;
+    }
+
+}
+
+
+/* =====================================================
+   TOUCH DEVICES
+===================================================== */
+
+button,
+input,
+select {
+    touch-action: manipulation;
+}
+
+
+/* Prevent iPhone zoom on inputs */
+
+@media (max-width: 700px) {
+
+    input,
+    select {
+        font-size: 16px;
     }
 
 }
@@ -205,7 +476,14 @@ th:first-child {
 
 <div class="container">
 
-<h1>GTS QC Rejection Report</h1>
+
+<!-- =====================================================
+     TITLE
+===================================================== -->
+
+<h1>
+    GTS QC Rejection Report
+</h1>
 
 
 <!-- =====================================================
@@ -214,7 +492,9 @@ th:first-child {
 
 <div class="controls">
 
-    <div>
+
+    <div class="control-box">
+
         <label for="reportDate">
             Date
         </label>
@@ -223,10 +503,12 @@ th:first-child {
             type="date"
             id="reportDate"
         >
+
     </div>
 
 
-    <div>
+    <div class="control-box">
+
         <label for="shift">
             Shift
         </label>
@@ -249,14 +531,18 @@ th:first-child {
 
     </div>
 
+
 </div>
 
 
 <!-- =====================================================
-     REJECTION TABLE
+     REJECTION
 ===================================================== -->
 
-<h2>Rejection Details</h2>
+<h2>
+    Rejection Details
+</h2>
+
 
 <div class="table-wrapper">
 
@@ -266,17 +552,17 @@ th:first-child {
 
 <tr>
 
-    <th>
-        Fault
-    </th>
+<th>
+    Fault
+</th>
 
-    <th>
-        Supplier
-    </th>
+<th>
+    Supplier
+</th>
 
-    <th>
-        Process
-    </th>
+<th>
+    Process
+</th>
 
 </tr>
 
@@ -293,10 +579,13 @@ th:first-child {
 
 
 <!-- =====================================================
-     PRODUCTION TABLE
+     PRODUCTION
 ===================================================== -->
 
-<h2>Production Details</h2>
+<h2>
+    Production Details
+</h2>
+
 
 <div class="table-wrapper">
 
@@ -306,13 +595,13 @@ th:first-child {
 
 <tr>
 
-    <th>
-        Model Name
-    </th>
+<th>
+    Model Name
+</th>
 
-    <th>
-        Production Count
-    </th>
+<th>
+    Production Count
+</th>
 
 </tr>
 
@@ -329,7 +618,7 @@ th:first-child {
 
 
 <!-- =====================================================
-     BUTTONS
+     ACTION BUTTONS
 ===================================================== -->
 
 <div class="action-buttons">
@@ -371,13 +660,14 @@ th:first-child {
     id="dailyTotal"
     class="daily-total">
 
+
 <h2>
     Daily Total
 </h2>
 
 
 <!-- =====================================================
-     OVERALL CARDS
+     TOTAL CARDS
 ===================================================== -->
 
 <div class="total-cards">
@@ -447,12 +737,13 @@ th:first-child {
 
 
 <!-- =====================================================
-     FAULT-WISE REJECTION TOTAL
+     FAULT-WISE TOTAL
 ===================================================== -->
 
 <h3>
     Fault-wise Rejection Total
 </h3>
+
 
 <div class="table-wrapper">
 
@@ -500,6 +791,7 @@ th:first-child {
     Shift-wise Production
 </h3>
 
+
 <div class="table-wrapper">
 
 <table class="daily-table">
@@ -538,6 +830,7 @@ th:first-child {
     Model-wise Production
 </h3>
 
+
 <div class="table-wrapper">
 
 <table class="daily-table">
@@ -569,7 +862,6 @@ th:first-child {
 
 
 </div>
-
 
 </div>
 
@@ -669,48 +961,57 @@ function createFaultRows() {
 
     body.innerHTML = "";
 
-    faults.forEach(function(fault, index) {
 
-        const row =
-            document.createElement("tr");
+    faults.forEach(
+        function(fault, index) {
 
-        row.innerHTML = `
+            const row =
+                document.createElement("tr");
 
-            <td>
-                ${escapeHtml(fault)}
-            </td>
 
-            <td>
-                <input
-                    type="number"
-                    min="0"
-                    value="0"
-                    class="rejection-input supplier-input"
-                    data-index="${index}"
-                >
-            </td>
+            row.innerHTML = `
 
-            <td>
-                <input
-                    type="number"
-                    min="0"
-                    value="0"
-                    class="rejection-input process-input"
-                    data-index="${index}"
-                >
-            </td>
+                <td>
+                    ${escapeHtml(fault)}
+                </td>
 
-        `;
+                <td>
 
-        body.appendChild(row);
+                    <input
+                        type="number"
+                        min="0"
+                        value="0"
+                        class="rejection-input supplier-input"
+                        data-index="${index}"
+                    >
 
-    });
+                </td>
+
+                <td>
+
+                    <input
+                        type="number"
+                        min="0"
+                        value="0"
+                        class="rejection-input process-input"
+                        data-index="${index}"
+                    >
+
+                </td>
+
+            `;
+
+
+            body.appendChild(row);
+
+        }
+    );
 
 }
 
 
 // =========================================================
-// ENTER KEY NAVIGATION
+// ENTER NAVIGATION
 // =========================================================
 
 function setupEnterNavigation() {
@@ -723,8 +1024,10 @@ function setupEnterNavigation() {
                 return;
             }
 
+
             const target =
                 event.target;
+
 
             if (
                 !target.classList.contains(
@@ -734,7 +1037,9 @@ function setupEnterNavigation() {
                 return;
             }
 
+
             event.preventDefault();
+
 
             const inputs =
                 Array.from(
@@ -743,17 +1048,25 @@ function setupEnterNavigation() {
                     )
                 );
 
+
             const currentIndex =
                 inputs.indexOf(target);
 
+
             if (
                 currentIndex >= 0 &&
-                currentIndex < inputs.length - 1
+                currentIndex <
+                    inputs.length - 1
             ) {
 
-                inputs[currentIndex + 1].focus();
+                inputs[
+                    currentIndex + 1
+                ].focus();
 
-                inputs[currentIndex + 1].select();
+
+                inputs[
+                    currentIndex + 1
+                ].select();
 
             }
 
@@ -764,7 +1077,7 @@ function setupEnterNavigation() {
 
 
 // =========================================================
-// PRODUCTION ROW
+// ADD PRODUCTION ROW
 // =========================================================
 
 function addProductionRow(
@@ -777,8 +1090,10 @@ function addProductionRow(
             "productionBody"
         );
 
+
     const row =
         document.createElement("tr");
+
 
     row.innerHTML = `
 
@@ -786,7 +1101,7 @@ function addProductionRow(
 
             <input
                 type="text"
-                class="production-input model-input"
+                class="model-input model-name-input"
                 value="${escapeHtml(modelName)}"
                 placeholder="Model Name"
             >
@@ -798,7 +1113,7 @@ function addProductionRow(
             <input
                 type="number"
                 min="0"
-                class="production-input count-input"
+                class="count-input"
                 value="${count}"
             >
 
@@ -806,23 +1121,44 @@ function addProductionRow(
 
     `;
 
+
     body.appendChild(row);
 
 }
 
 
 // =========================================================
-// HTML ESCAPE
+// ESCAPE HTML
 // =========================================================
 
 function escapeHtml(value) {
 
     return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
+
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
 
 }
 
@@ -838,6 +1174,7 @@ async function loadData() {
             "reportDate"
         ).value;
 
+
     const shift =
         document.getElementById(
             "shift"
@@ -852,7 +1189,7 @@ async function loadData() {
     try {
 
         // ---------------------------------------------
-        // LOAD REJECTIONS
+        // REJECTION
         // ---------------------------------------------
 
         const rejectionResponse =
@@ -872,6 +1209,7 @@ async function loadData() {
                     ".supplier-input"
                 );
 
+
             const processInputs =
                 document.querySelectorAll(
                     ".process-input"
@@ -881,16 +1219,25 @@ async function loadData() {
             rejectionData.data.forEach(
                 function(item, index) {
 
-                    if (supplierInputs[index]) {
+                    if (
+                        supplierInputs[index]
+                    ) {
 
-                        supplierInputs[index].value =
+                        supplierInputs[
+                            index
+                        ].value =
                             item.supplier || 0;
 
                     }
 
-                    if (processInputs[index]) {
 
-                        processInputs[index].value =
+                    if (
+                        processInputs[index]
+                    ) {
+
+                        processInputs[
+                            index
+                        ].value =
                             item.process || 0;
 
                     }
@@ -902,7 +1249,7 @@ async function loadData() {
 
 
         // ---------------------------------------------
-        // LOAD PRODUCTION
+        // PRODUCTION
         // ---------------------------------------------
 
         const productionResponse =
@@ -919,6 +1266,7 @@ async function loadData() {
             document.getElementById(
                 "productionBody"
             );
+
 
         productionBody.innerHTML = "";
 
@@ -946,11 +1294,6 @@ async function loadData() {
         }
 
 
-        showMessage(
-            "Data loaded",
-            "success"
-        );
-
     }
 
     catch (error) {
@@ -968,7 +1311,7 @@ async function loadData() {
 
 
 // =========================================================
-// SAVE DATA
+// SAVE
 // =========================================================
 
 async function saveData() {
@@ -977,6 +1320,7 @@ async function saveData() {
         document.getElementById(
             "reportDate"
         ).value;
+
 
     const shift =
         document.getElementById(
@@ -992,6 +1336,7 @@ async function saveData() {
         );
 
         return;
+
     }
 
 
@@ -1002,6 +1347,7 @@ async function saveData() {
         document.querySelectorAll(
             ".supplier-input"
         );
+
 
     const processInputs =
         document.querySelectorAll(
@@ -1014,22 +1360,30 @@ async function saveData() {
 
             const supplier =
                 parseInt(
-                    supplierInputs[index].value
+                    supplierInputs[
+                        index
+                    ].value
                 ) || 0;
+
 
             const process =
                 parseInt(
-                    processInputs[index].value
+                    processInputs[
+                        index
+                    ].value
                 ) || 0;
 
 
             data.push({
 
-                fault_name: fault,
+                fault_name:
+                    fault,
 
-                supplier: supplier,
+                supplier:
+                    supplier,
 
-                process: process
+                process:
+                    process
 
             });
 
@@ -1046,8 +1400,9 @@ async function saveData() {
 
     const modelInputs =
         document.querySelectorAll(
-            ".model-input"
+            ".model-name-input"
         );
+
 
     const countInputs =
         document.querySelectorAll(
@@ -1062,11 +1417,16 @@ async function saveData() {
     ) {
 
         const modelName =
-            modelInputs[i].value.trim();
+            modelInputs[
+                i
+            ].value.trim();
+
 
         const count =
             parseInt(
-                countInputs[i].value
+                countInputs[
+                    i
+                ].value
             ) || 0;
 
 
@@ -1077,9 +1437,11 @@ async function saveData() {
 
             production.push({
 
-                model_name: modelName,
+                model_name:
+                    modelName,
 
-                production_count: count
+                production_count:
+                    count
 
             });
 
@@ -1095,28 +1457,30 @@ async function saveData() {
                 "/save",
                 {
 
-                    method: "POST",
+                    method:
+                        "POST",
 
                     headers: {
                         "Content-Type":
                             "application/json"
                     },
 
-                    body: JSON.stringify({
+                    body:
+                        JSON.stringify({
 
-                        report_date:
-                            reportDate,
+                            report_date:
+                                reportDate,
 
-                        shift:
-                            shift,
+                            shift:
+                                shift,
 
-                        data:
-                            data,
+                            data:
+                                data,
 
-                        production:
-                            production
+                            production:
+                                production
 
-                    })
+                        })
 
                 }
             );
@@ -1208,7 +1572,7 @@ async function showDailyTotal() {
 
 
         // =================================================
-        // OVERALL TOTALS
+        // OVERALL CARDS
         // =================================================
 
         document.getElementById(
@@ -1253,27 +1617,25 @@ async function showDailyTotal() {
 
 
         let grandSupplier = 0;
+
         let grandProcess = 0;
 
 
-        if (faultData.length === 0) {
+        if (
+            faultData.length === 0
+        ) {
 
-            const emptyRow =
-                document.createElement("tr");
+            faultBody.innerHTML = `
 
+                <tr>
 
-            emptyRow.innerHTML = `
+                    <td colspan="4">
+                        No rejection data found
+                    </td>
 
-                <td colspan="4">
-                    No rejection data found
-                </td>
+                </tr>
 
             `;
-
-
-            faultBody.appendChild(
-                emptyRow
-            );
 
         } else {
 
@@ -1283,8 +1645,10 @@ async function showDailyTotal() {
                     const supplier =
                         item.supplier || 0;
 
+
                     const process =
                         item.process || 0;
+
 
                     const total =
                         item.total || 0;
@@ -1293,12 +1657,15 @@ async function showDailyTotal() {
                     grandSupplier +=
                         supplier;
 
+
                     grandProcess +=
                         process;
 
 
                     const row =
-                        document.createElement("tr");
+                        document.createElement(
+                            "tr"
+                        );
 
 
                     row.innerHTML = `
@@ -1334,17 +1701,15 @@ async function showDailyTotal() {
             );
 
 
-            // ---------------------------------------------
-            // GRAND TOTAL
-            // ---------------------------------------------
-
             const grandTotal =
                 grandSupplier +
                 grandProcess;
 
 
             const totalRow =
-                document.createElement("tr");
+                document.createElement(
+                    "tr"
+                );
 
 
             totalRow.innerHTML = `
@@ -1400,7 +1765,9 @@ async function showDailyTotal() {
             data.production_by_shift || [];
 
 
-        if (shiftData.length === 0) {
+        if (
+            shiftData.length === 0
+        ) {
 
             shiftBody.innerHTML = `
 
@@ -1420,7 +1787,9 @@ async function showDailyTotal() {
                 function(item) {
 
                     const row =
-                        document.createElement("tr");
+                        document.createElement(
+                            "tr"
+                        );
 
 
                     row.innerHTML = `
@@ -1465,7 +1834,9 @@ async function showDailyTotal() {
             data.production_by_model || [];
 
 
-        if (modelData.length === 0) {
+        if (
+            modelData.length === 0
+        ) {
 
             modelBody.innerHTML = `
 
@@ -1485,7 +1856,9 @@ async function showDailyTotal() {
                 function(item) {
 
                     const row =
-                        document.createElement("tr");
+                        document.createElement(
+                            "tr"
+                        );
 
 
                     row.innerHTML = `
@@ -1514,20 +1887,22 @@ async function showDailyTotal() {
 
 
         // =================================================
-        // SHOW DAILY TOTAL
+        // SHOW
         // =================================================
 
-        document.getElementById(
-            "dailyTotal"
-        ).style.display = "block";
+        const dailyTotal =
+            document.getElementById(
+                "dailyTotal"
+            );
 
 
-        document.getElementById(
-            "dailyTotal"
-        ).scrollIntoView({
+        dailyTotal.style.display =
+            "block";
+
+
+        dailyTotal.scrollIntoView({
             behavior: "smooth"
         });
-
 
     }
 
@@ -1555,6 +1930,7 @@ async function downloadShift() {
         document.getElementById(
             "reportDate"
         ).value;
+
 
     const shift =
         document.getElementById(
@@ -1604,12 +1980,15 @@ async function downloadShift() {
             reportDate
         ]);
 
+
         rows.push([
             "Shift",
             shift
         ]);
 
+
         rows.push([]);
+
 
         rows.push([
             "Fault",
@@ -1625,8 +2004,10 @@ async function downloadShift() {
                 const supplier =
                     item.supplier || 0;
 
+
                 const process =
                     item.process || 0;
+
 
                 rows.push([
                     item.fault_name,
@@ -1640,6 +2021,7 @@ async function downloadShift() {
 
 
         rows.push([]);
+
 
         rows.push([
             "Model",
@@ -1740,8 +2122,6 @@ async function downloadDay() {
         rows.push([]);
 
 
-        // Fault-wise
-
         rows.push([
             "Fault",
             "Supplier",
@@ -1750,19 +2130,20 @@ async function downloadDay() {
         ]);
 
 
-        (data.rejection_by_fault || [])
-            .forEach(
-                function(item) {
+        (
+            data.rejection_by_fault || []
+        ).forEach(
+            function(item) {
 
-                    rows.push([
-                        item.fault_name,
-                        item.supplier || 0,
-                        item.process || 0,
-                        item.total || 0
-                    ]);
+                rows.push([
+                    item.fault_name,
+                    item.supplier || 0,
+                    item.process || 0,
+                    item.total || 0
+                ]);
 
-                }
-            );
+            }
+        );
 
 
         rows.push([]);
@@ -1779,31 +2160,28 @@ async function downloadDay() {
         rows.push([]);
 
 
-        // Shift production
-
         rows.push([
             "Shift",
             "Production"
         ]);
 
 
-        (data.production_by_shift || [])
-            .forEach(
-                function(item) {
+        (
+            data.production_by_shift || []
+        ).forEach(
+            function(item) {
 
-                    rows.push([
-                        item.shift,
-                        item.production || 0
-                    ]);
+                rows.push([
+                    item.shift,
+                    item.production || 0
+                ]);
 
-                }
-            );
+            }
+        );
 
 
         rows.push([]);
 
-
-        // Model production
 
         rows.push([
             "Model",
@@ -1811,17 +2189,18 @@ async function downloadDay() {
         ]);
 
 
-        (data.production_by_model || [])
-            .forEach(
-                function(item) {
+        (
+            data.production_by_model || []
+        ).forEach(
+            function(item) {
 
-                    rows.push([
-                        item.model_name,
-                        item.production || 0
-                    ]);
+                rows.push([
+                    item.model_name,
+                    item.production || 0
+                ]);
 
-                }
-            );
+            }
+        );
 
 
         downloadCSV(
@@ -1928,7 +2307,9 @@ function downloadCSV(
 
 
     const link =
-        document.createElement("a");
+        document.createElement(
+            "a"
+        );
 
 
     link.href = url;
@@ -1949,7 +2330,7 @@ function downloadCSV(
 
 
 // =========================================================
-// DELETE DATA
+// DELETE
 // =========================================================
 
 async function deleteData() {
@@ -1958,6 +2339,7 @@ async function deleteData() {
         document.getElementById(
             "reportDate"
         ).value;
+
 
     const shift =
         document.getElementById(
@@ -1994,7 +2376,8 @@ async function deleteData() {
             await fetch(
                 `/delete?report_date=${encodeURIComponent(reportDate)}&shift=${encodeURIComponent(shift)}`,
                 {
-                    method: "DELETE"
+                    method:
+                        "DELETE"
                 }
             );
 
@@ -2006,6 +2389,7 @@ async function deleteData() {
         if (result.success) {
 
             clearScreenForNewShift();
+
 
             showMessage(
                 "Data deleted successfully",
@@ -2065,6 +2449,7 @@ function clearScreenForNewShift() {
 
     productionBody.innerHTML = "";
 
+
     addProductionRow();
 
 
@@ -2076,7 +2461,7 @@ function clearScreenForNewShift() {
 
 
 // =========================================================
-// SHOW MESSAGE
+// MESSAGE
 // =========================================================
 
 function showMessage(
@@ -2123,12 +2508,7 @@ document.addEventListener(
     "DOMContentLoaded",
     function() {
 
-        // Create fault rows
-
         createFaultRows();
-
-
-        // Enter navigation
 
         setupEnterNavigation();
 
@@ -2167,12 +2547,8 @@ document.addEventListener(
             `${yyyy}-${mm}-${dd}`;
 
 
-        // Production first row
-
         addProductionRow();
 
-
-        // Load current data
 
         loadData();
 
